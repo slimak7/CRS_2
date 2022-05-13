@@ -1,4 +1,4 @@
-module com.crs.view.view {
+module com.crs.view {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -9,9 +9,12 @@ module com.crs.view.view {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires Logic;
 
-    opens com.crs.view.view to javafx.fxml;
-    exports com.crs.view.view;
+
+
+    opens com.crs.view to javafx.fxml;
+    exports com.crs.view;
 
 
 }
