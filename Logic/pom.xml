@@ -28,6 +28,12 @@
             <version>19-ea+6</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.decimal4j</groupId>
+            <artifactId>decimal4j</artifactId>
+            <version>1.0.3</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
