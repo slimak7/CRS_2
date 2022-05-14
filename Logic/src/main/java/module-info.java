@@ -1,7 +1,8 @@
 module Logic {
     requires static lombok;
     requires javafx.base;
-    requires decimal4j;
+    requires static decimal4j;
+    requires java.sql;
 
 
     exports DataModel;

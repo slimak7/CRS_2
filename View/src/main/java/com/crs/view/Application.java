@@ -8,10 +8,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 
 public class Application extends javafx.application.Application {
     @Override
-    public void start(Stage stage) throws IOException, URISyntaxException {
+    public void start(Stage stage) throws IOException, URISyntaxException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("startView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("KSR");
@@ -23,7 +24,7 @@ public class Application extends javafx.application.Application {
         initialize();
     }
 
-    private void initialize() throws URISyntaxException {
+    private void initialize() throws URISyntaxException, SQLException {
         HousesRepo repo = new HousesRepo(
                 LoadingManager.LoadHouses()
         );

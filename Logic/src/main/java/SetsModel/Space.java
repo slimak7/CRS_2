@@ -8,8 +8,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.ToString;
 import org.decimal4j.util.DoubleRounder;
 
+@ToString
 @AllArgsConstructor
 public class Space {
 
@@ -17,10 +19,6 @@ public class Space {
         discrete, dense
     };
 
-    public class Range {
-
-        public Double min, max;
-    }
 
     @Getter SpaceType spaceType;
     @Getter Range range;
@@ -29,7 +27,7 @@ public class Space {
 
         if (getSpaceType().equals(SpaceType.dense)){
 
-            if (value >= getRange().min && value <= getRange().max)
+            if (value >= getRange().getMin() && value <= getRange().getMax())
                 return true;
         }
         else {
@@ -40,7 +38,7 @@ public class Space {
                 return false;
             }
             else {
-                if (value >= getRange().min && value <= getRange().max)
+                if (value >= getRange().getMin() && value <= getRange().getMax())
                     return true;
                 else
                     return false;

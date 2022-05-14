@@ -10,7 +10,7 @@ module com.crs.view {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires Logic;
-
+    requires java.sql;
 
 
     opens com.crs.view to javafx.fxml;

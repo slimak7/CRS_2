@@ -10,35 +10,40 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class LoadingManager {
 
-    private static final String FILE_NAME = "PortlandHousingPrices.csv";
+    private static final String DB_NAME = "jdbc:sqlite:HousesDB";
 
-    public static List<House> LoadHouses() throws URISyntaxException {
+    public static List<House> LoadHouses() throws URISyntaxException, SQLException {
 
         List<House> houses = new ArrayList<>();
 
-        File file = new File(LoadingManager.class.getClassLoader().getResource(FILE_NAME).toURI());
+        Connection connection = DriverManager.getConnection(DB_NAME);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = br.readLine();
-            while ((line = br.readLine()) != null) {
+        Statement statement = connection.createStatement();
+        statement.setQueryTimeout(30);
 
-                String[] parts = line.split(",");
+        ResultSet resultSet = statement.executeQuery("select * from main.houses");
 
-                int number = Integer.parseInt(parts[0]);
+        while (resultSet.next()){
 
-                Double values[] = new Double[10];
+            Integer id = resultSet.getInt(1);
 
-                for(int i = 0; i < 10; i++){
+            Double values[] = new Double[10];
 
-                    values[i] = Double.parseDouble(parts[i+1]);
-                }
-
-                houses.add(new House(number, values));
+            for(int i = 0; i < 10; i++) {
+                values[i] = resultSet.getDouble(i + 2);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            houses.add(new House(id, values));
+
         }
 
         return houses;

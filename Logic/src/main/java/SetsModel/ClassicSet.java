@@ -3,11 +3,14 @@ package SetsModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@ToString
 @AllArgsConstructor
 public class ClassicSet implements SetsOperations<ClassicSet> {
 
@@ -18,8 +21,10 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
     @Getter @Setter private boolean complement;
 
     @Override
-    public ClassicSet sum(ClassicSet s1, ClassicSet s2) throws CloneNotSupportedException {
+    public ClassicSet sum(ClassicSet s2) throws CloneNotSupportedException {
 
+
+        ClassicSet s1 = this;
         Set<Double> elements = new HashSet<>();
 
         if (s1.isComplement() == s2.isComplement() && !s1.isComplement()) {
@@ -29,7 +34,7 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
 
             return new ClassicSet(elements.stream().toList(), s1.getSpace(), false);
         }
-        else if (s1.isComplement() == s2.isComplement() && isComplement()) {
+        else if (s1.isComplement() == s2.isComplement() && s1.isComplement()) {
 
             for (int i = 0; i < s1.getElements().size(); i++){
 
@@ -44,33 +49,83 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
 
             if (s2.isComplement()){
 
-                return cloneClassicSet(s2, s1);
+                return sumSetAndComplement(s2, s1);
             }
             else {
 
-                return cloneClassicSet(s1, s2);
+                return sumSetAndComplement(s1, s2);
             }
         }
 
     }
 
-    private ClassicSet cloneClassicSet(ClassicSet s1, ClassicSet s2) throws CloneNotSupportedException {
-        s1 = (ClassicSet) s1.clone();
+    private ClassicSet sumSetAndComplement(ClassicSet s1, ClassicSet s2) throws CloneNotSupportedException {
 
-        for (int i = 0; i < s2.getElements().size(); i++){
+        List<Double> elements = new ArrayList<>();
+        elements.addAll(s1.getElements());
 
-            if (s1.contains(s2.getElements().get(i))){
+        for (int i = 0; i < elements.size(); i++){
 
-                s1.removeElement(s2.getElements().get(i));
+            if (s2.contains(elements.get(i))){
+
+               elements.remove(elements.get(i));
             }
         }
 
-        return new ClassicSet(s1.getElements(), s1.getSpace(), true);
+        return new ClassicSet(elements, s1.getSpace(), true);
+    }
+
+    public  ClassicSet productSetsAndComplement(ClassicSet s1, ClassicSet s2) {
+
+        List<Double> elements = new ArrayList<>();
+
+        for (int i = 0; i < s1.getElements().size(); i++){
+
+            if (s2.contains(s1.getElements().get(i))){
+
+                elements.add(s1.getElements().get(i));
+            }
+        }
+
+        return new ClassicSet(elements, s1.getSpace(), false);
     }
 
     @Override
-    public ClassicSet product(ClassicSet s1, ClassicSet s2) {
-        return null;
+    public ClassicSet product(ClassicSet s2) throws CloneNotSupportedException {
+
+        ClassicSet s1 = this;
+        Set<Double> elements = new HashSet<>();
+
+        if (s1.isComplement() == s2.isComplement() && !s1.isComplement()) {
+
+            for (int i = 0; i < s1.getElements().size(); i++){
+
+                if (s2.getElements().contains(s1.getElements().get(i))){
+                    elements.add(s1.getElements().get(i));
+                }
+            }
+
+            return new ClassicSet(elements.stream().toList(), s1.getSpace(), false);
+        }
+        else if (s1.isComplement() == s2.isComplement() && s1.isComplement()) {
+
+            elements.addAll(s1.getElements());
+            elements.addAll(s2.getElements());
+
+
+            return new ClassicSet(elements.stream().toList(), s1.getSpace(), true);
+        }
+        else {
+
+            if (s2.isComplement()){
+
+                return productSetsAndComplement(s1, s2);
+            }
+            else {
+
+                return productSetsAndComplement(s2, s1);
+            }
+        }
     }
 
     public boolean contains(Double element) {
@@ -93,4 +148,6 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
 
         getElements().remove(element);
    }
+
+
 }
