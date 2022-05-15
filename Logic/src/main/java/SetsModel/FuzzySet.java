@@ -12,34 +12,58 @@ import java.util.List;
 public class FuzzySet implements SetsOperations<FuzzySet> {
 
     @Getter private ClassicSet classicSet;
-    @Getter private MembershipFunction function;
+    @Getter private Function function;
     @Getter private List<Double> membershipValues;
+    @Getter private boolean isComplement;
 
-    public FuzzySet(ClassicSet classicSet, MembershipFunction function) {
+    public FuzzySet(ClassicSet classicSet, Function function, boolean isComplement) {
         this.classicSet = classicSet;
         this.function = function;
+        this.isComplement = isComplement;
 
         membershipValues = getMembershipValues();
     }
 
     @Override
     public FuzzySet sum(FuzzySet s2) {
-        return null;
+
+        ClassicSet set = classicSet.sum(s2.getClassicSet());
+
+        Function f = new Function(FuzzyOperationsType.Sum, function.getMembershipFunction(),
+                s2.getFunction());
+
+        boolean c = isComplement || s2.isComplement();
+
+        return new FuzzySet(set, f, c);
     }
 
     @Override
     public FuzzySet product(FuzzySet s2) {
-        return null;
+
+        ClassicSet set = classicSet.product(s2.getClassicSet());
+
+        Function f = new Function(FuzzyOperationsType.Product, function.getMembershipFunction(),
+                s2.getFunction());
+
+        boolean c = isComplement || s2.isComplement();
+
+        return new FuzzySet(set, f, c);
     }
 
     private List<Double> getMembershipValues() {
 
         List<Double> values = new ArrayList<>();
 
+        if (classicSet.isComplement())
+            return values;
+
         for (var element:classicSet.getElements()
              ) {
 
-            values.add(function.calculateMembership(element));
+            if (!isComplement)
+                values.add(function.calculateMembership(element));
+            else
+                values.add(1 - function.calculateMembership(element));
         }
 
         return values;

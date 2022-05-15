@@ -72,6 +72,7 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
             }
         }
 
+
         return new ClassicSet(elements, s1.getSpace(), true);
     }
 

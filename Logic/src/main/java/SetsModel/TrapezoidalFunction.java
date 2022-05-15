@@ -24,4 +24,6 @@ public class TrapezoidalFunction implements MembershipFunction{
         else
             return 0.0;
     }
+
+
 }

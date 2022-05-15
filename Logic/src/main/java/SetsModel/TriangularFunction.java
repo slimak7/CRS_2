@@ -29,4 +29,6 @@ public class TriangularFunction implements MembershipFunction {
             return 0.0;
 
     }
+
+
 }
