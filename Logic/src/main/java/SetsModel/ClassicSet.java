@@ -21,7 +21,7 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
     @Getter @Setter private boolean complement;
 
     @Override
-    public ClassicSet sum(ClassicSet s2) throws CloneNotSupportedException {
+    public ClassicSet sum(ClassicSet s2)  {
 
 
         ClassicSet s1 = this;
@@ -59,7 +59,7 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
 
     }
 
-    private ClassicSet sumSetAndComplement(ClassicSet s1, ClassicSet s2) throws CloneNotSupportedException {
+    private ClassicSet sumSetAndComplement(ClassicSet s1, ClassicSet s2) {
 
         List<Double> elements = new ArrayList<>();
         elements.addAll(s1.getElements());
@@ -91,7 +91,7 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
     }
 
     @Override
-    public ClassicSet product(ClassicSet s2) throws CloneNotSupportedException {
+    public ClassicSet product(ClassicSet s2) {
 
         ClassicSet s1 = this;
         Set<Double> elements = new HashSet<>();

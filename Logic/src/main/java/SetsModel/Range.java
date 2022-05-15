@@ -10,4 +10,6 @@ public class Range {
 
     @Getter private Double min;
     @Getter private Double max;
+
+
 }
