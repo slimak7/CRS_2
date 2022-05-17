@@ -21,6 +21,7 @@ public class House {
     elementarySchoolDistance,
     middleSchoolDistance,
     highSchoolDistance;
+    @Getter String city;
 
     public House(Integer number, Double values[]) {
         this.number = number;

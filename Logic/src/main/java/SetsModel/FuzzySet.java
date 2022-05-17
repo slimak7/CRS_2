@@ -24,6 +24,16 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         membershipValues = getMembershipValues();
     }
 
+    public FuzzySet(Function function) {
+        this.function = function;
+        isComplement = false;
+    }
+
+    public FuzzySet(Function function, boolean isComplement) {
+        this.function = function;
+        this.isComplement = isComplement;
+    }
+
     @Override
     public FuzzySet sum(FuzzySet s2) {
 
@@ -67,5 +77,74 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         }
 
         return values;
+
     }
+
+    public void addElement(Double element) {
+
+        classicSet.addElement(element);
+
+        membershipValues = getMembershipValues();
+    }
+
+    public boolean isEmpty() {
+
+        if (classicSet == null)
+            return true;
+
+        if (classicSet.getElements().size() == 0)
+            return true;
+
+        Double v = membershipValues.stream().filter(x -> x != 0.0).findAny().orElse(0.0);
+        if (v.equals(0.0)){
+            return true;
+        }
+
+        return false;
+    }
+
+    public ClassicSet getMedium() {
+
+        if (classicSet == null)
+            return null;
+
+        if (classicSet.getElements().isEmpty())
+            return null;
+
+        ClassicSet set = new ClassicSet(classicSet.getSpace());
+
+        for (int i = 0; i < membershipValues.size(); i++) {
+
+            if (membershipValues.get(i) > 0.0) {
+
+                set.addElement(classicSet.getElements().get(i));
+            }
+        }
+
+
+        return set;
+    }
+
+    public ClassicSet getAlphaCross(Double alpha) {
+
+        if (classicSet == null)
+            return null;
+
+        if (classicSet.getElements().isEmpty())
+            return null;
+
+        ClassicSet set = new ClassicSet(classicSet.getSpace());
+
+        for (int i = 0; i < membershipValues.size(); i++) {
+
+            if (membershipValues.get(i) >= alpha) {
+
+                set.addElement(classicSet.getElements().get(i));
+            }
+        }
+
+        return set;
+    }
+
+
 }

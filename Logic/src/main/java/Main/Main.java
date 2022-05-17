@@ -101,6 +101,8 @@ public class Main {
 
         FuzzySet f123 = f3.product(f12);
 
+
+
         System.out.println(f123);
     }
 }

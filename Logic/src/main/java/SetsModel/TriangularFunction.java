@@ -4,6 +4,7 @@ import javafx.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import java.util.ArrayList;
 import java.util.List;

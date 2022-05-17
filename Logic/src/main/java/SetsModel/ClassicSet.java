@@ -20,6 +20,16 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
 
     @Getter @Setter private boolean complement;
 
+    public ClassicSet(Space space) {
+        this.space = space;
+        complement = false;
+    }
+
+    public ClassicSet(Space space, boolean complement) {
+        this.space = space;
+        this.complement = complement;
+    }
+
     @Override
     public ClassicSet sum(ClassicSet s2)  {
 
@@ -148,6 +158,10 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
    public void removeElement(Double element){
 
         getElements().remove(element);
+   }
+
+   public void addElement(Double element) {
+        getElements().add(element);
    }
 
 

@@ -2,6 +2,7 @@ package SetsModel;
 
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.math3.analysis.UnivariateFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,5 +64,6 @@ public class Function {
 
         return 0.0;
     }
+
 
 }

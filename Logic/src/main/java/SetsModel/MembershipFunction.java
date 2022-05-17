@@ -4,4 +4,5 @@ public interface MembershipFunction {
 
     Double calculateMembership(Double x);
 
+
 }
