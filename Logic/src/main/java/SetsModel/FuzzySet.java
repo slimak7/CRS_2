@@ -1,8 +1,6 @@
 package SetsModel;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
     @Getter private ClassicSet classicSet;
     @Getter private Function function;
-    @Getter private List<Double> membershipValues;
+    @Getter private List<Double> membershipValuesList;
     @Getter private boolean isComplement;
 
     public FuzzySet(ClassicSet classicSet, Function function, boolean isComplement) {
@@ -21,7 +19,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         this.function = function;
         this.isComplement = isComplement;
 
-        membershipValues = getMembershipValues();
+        membershipValuesList = getMembershipValues();
     }
 
     public FuzzySet(Function function) {
@@ -80,11 +78,19 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
     }
 
+    public void setClassicSet(ClassicSet set) {
+
+        classicSet = set;
+
+        if (function != null)
+            membershipValuesList = getMembershipValues();
+    }
+
     public void addElement(Double element) {
 
         classicSet.addElement(element);
 
-        membershipValues = getMembershipValues();
+        membershipValuesList = getMembershipValues();
     }
 
     public boolean isEmpty() {
@@ -95,7 +101,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         if (classicSet.getElements().size() == 0)
             return true;
 
-        Double v = membershipValues.stream().filter(x -> x != 0.0).findAny().orElse(0.0);
+        Double v = membershipValuesList.stream().filter(x -> x != 0.0).findAny().orElse(0.0);
         if (v.equals(0.0)){
             return true;
         }
@@ -113,9 +119,9 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
         ClassicSet set = new ClassicSet(classicSet.getSpace());
 
-        for (int i = 0; i < membershipValues.size(); i++) {
+        for (int i = 0; i < membershipValuesList.size(); i++) {
 
-            if (membershipValues.get(i) > 0.0) {
+            if (membershipValuesList.get(i) > 0.0) {
 
                 set.addElement(classicSet.getElements().get(i));
             }
@@ -135,15 +141,20 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
         ClassicSet set = new ClassicSet(classicSet.getSpace());
 
-        for (int i = 0; i < membershipValues.size(); i++) {
+        for (int i = 0; i < membershipValuesList.size(); i++) {
 
-            if (membershipValues.get(i) >= alpha) {
+            if (membershipValuesList.get(i) >= alpha) {
 
                 set.addElement(classicSet.getElements().get(i));
             }
         }
 
         return set;
+    }
+
+    public Double getDegreeOfFuzziness() {
+
+        return (double) getMedium().getElements().size() / (double) getClassicSet().getElements().size();
     }
 
 

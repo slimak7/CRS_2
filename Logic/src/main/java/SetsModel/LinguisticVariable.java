@@ -3,6 +3,8 @@ package SetsModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +36,15 @@ public class LinguisticVariable {
     public FuzzySet getCurrentFuzzySet() {
 
         return labels.get(currentLabel);
+    }
+
+    public List<FuzzySet> getAllFuzzySets () {
+
+        List<FuzzySet> sets = new ArrayList<>();
+
+        labels.forEach((key, value) -> sets.add(value));
+
+        return sets;
     }
 
 }

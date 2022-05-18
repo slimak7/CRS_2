@@ -25,7 +25,15 @@ public class TrapezoidalFunction implements MembershipFunction{
             return 0.0;
     }
 
+    @Override
+    public Double getSupport() {
+        return b - a;
+    }
 
+    @Override
+    public Double getCardinality() {
+        return 0.5 * (b - a + (c - d));
+    }
 
 
 }
