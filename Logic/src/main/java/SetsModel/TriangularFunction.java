@@ -32,13 +32,13 @@ public class TriangularFunction implements MembershipFunction {
     }
 
     @Override
-    public Double getSupport() {
-        return b - a;
+    public Double getSupportRange() {
+        return c - a;
     }
 
     @Override
-    public Double getCardinality() {
-        return 0.5 * (b - a);
+    public Double getCardinalityRange() {
+        return 0.5 * (c - a);
     }
 
 

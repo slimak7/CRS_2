@@ -2,12 +2,11 @@ package Repos;
 
 import SetsModel.LinguisticQuantifier;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@ToString
 public class LinguisticQuantifierRepo {
 
     Map<String, LinguisticQuantifier> quantifiers;
@@ -26,5 +25,14 @@ public class LinguisticQuantifierRepo {
     public LinguisticQuantifier getQuantifier(String name) {
 
         return quantifiers.get(name);
+    }
+
+    public List<LinguisticQuantifier> getAll() {
+
+        List<LinguisticQuantifier> q = new ArrayList<>();
+
+        quantifiers.forEach((key, v) -> q.add(v));
+
+        return q;
     }
 }

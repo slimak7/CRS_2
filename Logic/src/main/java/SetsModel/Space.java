@@ -25,25 +25,9 @@ public class Space {
 
     public boolean contains(Double value) {
 
-        if (getSpaceType().equals(SpaceType.dense)){
+        if (value >= getRange().getMin() && value <= getRange().getMax())
+            return true;
 
-            if (value >= getRange().getMin() && value <= getRange().getMax())
-                return true;
-        }
-        else {
-
-            Double d = DoubleRounder.round(value, 0);
-
-            if (!value.equals(d)) {
-                return false;
-            }
-            else {
-                if (value >= getRange().getMin() && value <= getRange().getMax())
-                    return true;
-                else
-                    return false;
-            }
-        }
         return false;
     }
 

@@ -3,11 +3,12 @@ package Repos;
 import SetsModel.LinguisticVariable;
 import SetsModel.AttributeType;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.LinkedList;
 import java.util.List;
 
-
+@ToString
 public class LinguisticVariableRepo {
 
     @Getter private List<LinguisticVariable> linguisticVariables;

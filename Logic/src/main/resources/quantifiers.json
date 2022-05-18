@@ -1,0 +1,127 @@
+{
+    "Względne" : {
+        "space": "continuous",
+        "range" : [0, 1],
+        "labels": [
+            {
+                "name": "prawie żaden",
+                    "type" : "gauss",
+                    "params" : {
+                        "m" : 0,
+                        "s" : 0.06,
+                        "l" : 0,
+                        "r" : 0.2
+                    }
+
+            },
+            {
+                "name": "niewiele",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 0,
+                        "b" : 0.1,
+                        "c" : 0.3,
+                        "d" : 0.45
+                    }
+
+            },
+            {
+                "name": "około połowy",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 0.3,
+                        "b" : 0.45,
+                        "c" : 0.55,
+                        "d" : 0.7
+                    }
+
+            },
+            {
+                "name": "sporo",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 0.55,
+                        "b" : 0.7,
+                        "c" : 0.9,
+                        "d" : 1
+                    }
+
+            },
+            {
+                "name": "prawie wszystkie",
+                    "type" : "gauss",
+                    "params" : {
+                        "m" : 1,
+                        "s" : 0.06,
+                        "l" : 0.8,
+                        "r" : 1
+                    }
+
+            }
+        ]
+            
+    },
+    
+    "Absolutne" : {
+        "space": "discrete",
+        "range" : [0, 12253],
+        "labels": [
+            {
+                "name": "mniej niz 100",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 0,
+                        "b" : 0,
+                        "c" : 90,
+                        "d" : 100
+                    }
+
+            },
+            {
+                "name": "około 250",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 50,
+                        "b" : 200,
+                        "c" : 300,
+                        "d" : 450
+                    }
+
+            },
+            {
+                "name": "około 500",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 300,
+                        "b" : 450,
+                        "c" : 550,
+                        "d" : 700
+                    }
+
+            },
+            {
+                "name": "około 750",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 550,
+                        "b" : 700,
+                        "c" : 800,
+                        "d" : 950
+                    }
+
+            },
+            {
+                "name": "ponad 950",
+                    "type" : "trapezoidal",
+                    "params" : {
+                        "a" : 900,
+                        "b" : 910,
+                        "c" : 12253,
+                        "d" : 12253
+                    }
+                }
+
+        ]
+            
+    }
+}

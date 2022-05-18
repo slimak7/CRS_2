@@ -26,13 +26,13 @@ public class TrapezoidalFunction implements MembershipFunction{
     }
 
     @Override
-    public Double getSupport() {
-        return b - a;
+    public Double getSupportRange() {
+        return d-a;
     }
 
     @Override
-    public Double getCardinality() {
-        return 0.5 * (b - a + (c - d));
+    public Double getCardinalityRange() {
+        return 0.5 * (d - a + (c - b));
     }
 
 

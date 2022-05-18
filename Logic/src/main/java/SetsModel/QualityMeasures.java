@@ -1,9 +1,5 @@
 package SetsModel;
 
-import Repos.LinguisticQuantifierRepo;
-import SetsModel.LinguisticQuantifier;
-import SetsModel.LinguisticVariable;
-import SetsModel.Summary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -292,7 +288,7 @@ public class QualityMeasures {
         for (var q:quantifiers
              ) {
 
-            Double supp = q.getSet().getFunction().getMembershipFunction().getSupport();
+            Double supp = q.getSet().getFunction().getMembershipFunction().getSupportRange();
 
             if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.absolute)) {
 
@@ -311,7 +307,7 @@ public class QualityMeasures {
         for (var q:quantifiers
         ) {
 
-            Double card = q.getSet().getFunction().getMembershipFunction().getCardinality();
+            Double card = q.getSet().getFunction().getMembershipFunction().getCardinalityRange();
 
             if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.absolute)) {
 
@@ -328,7 +324,7 @@ public class QualityMeasures {
         double product = 1.0;
 
         for (var sum : summarizers) {
-            product *= sum.getCurrentFuzzySet().getFunction().getMembershipFunction().getCardinality() / classicSet1.getElements().size();
+            product *= sum.getCurrentFuzzySet().getFunction().getMembershipFunction().getCardinalityRange() / classicSet1.getElements().size();
         }
 
         return 1 - Math.pow(product, (double) 1 / summarizers.size());
@@ -351,7 +347,7 @@ public class QualityMeasures {
         List<FuzzySet> sets = qualifier.getAllFuzzySets();
 
         for (var variable : sets) {
-            product *= variable.getFunction().getMembershipFunction().getCardinality() / classicSet1.getElements().size();
+            product *= variable.getFunction().getMembershipFunction().getCardinalityRange() / classicSet1.getElements().size();
         }
         return 1 - Math.pow(product, (double) 1 / sets.size());
     }

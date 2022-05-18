@@ -1,6 +1,6 @@
 package com.crs.view;
 
-import Managers.LoadingManager;
+import Managers.HouseLoadingManager;
 import Repos.HousesRepo;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,7 +26,7 @@ public class Application extends javafx.application.Application {
 
     private void initialize() throws URISyntaxException, SQLException {
         HousesRepo repo = new HousesRepo(
-                LoadingManager.LoadHouses()
+                HouseLoadingManager.LoadHouses()
         );
 
         Controller.instance.ShowHouses(repo.getHouses());

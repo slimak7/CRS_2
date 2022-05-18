@@ -62,7 +62,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
         List<Double> values = new ArrayList<>();
 
-        if (classicSet.isComplement())
+        if (classicSet.isComplement() || classicSet.getElements() == null)
             return values;
 
         for (var element:classicSet.getElements()
@@ -109,7 +109,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         return false;
     }
 
-    public ClassicSet getMedium() {
+    public ClassicSet getSupport() {
 
         if (classicSet == null)
             return null;
@@ -154,7 +154,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
     public Double getDegreeOfFuzziness() {
 
-        return (double) getMedium().getElements().size() / (double) getClassicSet().getElements().size();
+        return (double) getSupport().getElements().size() / (double) getClassicSet().getElements().size();
     }
 
 

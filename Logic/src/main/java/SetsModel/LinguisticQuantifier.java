@@ -2,7 +2,9 @@ package SetsModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
 public class LinguisticQuantifier {
 

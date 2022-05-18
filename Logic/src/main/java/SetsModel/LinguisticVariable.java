@@ -2,12 +2,14 @@ package SetsModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@ToString
 public class LinguisticVariable {
 
     @Getter private AttributeType attributeType;
@@ -21,6 +23,16 @@ public class LinguisticVariable {
         this.attributeType = attributeType;
         this.labels = labels;
         this.currentLabel = currentLabel;
+    }
+
+    public LinguisticVariable(AttributeType attributeType) {
+
+        this.attributeType = attributeType;
+        labels = new LinkedHashMap<>();
+    }
+
+    public void setCurrentLabel(String name) {
+        currentLabel = name;
     }
 
     public void addLabel(String label, FuzzySet set) {
