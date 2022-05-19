@@ -31,10 +31,12 @@ public class Main {
         System.out.println(linguisticVariableRepo);
 
         ClassicSet set1 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea), null, false);
+        ClassicSet set2 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.kitchenArea), null, false);
 
         linguisticVariableRepo.getVariable(AttributeType.livingArea).setCurrentLabel("niewielkie");
-        Summary summary = new Summary(null, quantifierRepo.getAll(),
-                Arrays.asList(linguisticVariableRepo.getVariable(AttributeType.livingArea)), set1, null, 1);
+        linguisticVariableRepo.getVariable(AttributeType.kitchenArea).setCurrentLabel("duże");
+        Summary summary = new Summary(linguisticVariableRepo.getVariable(AttributeType.kitchenArea), quantifierRepo.getAll(),
+                Arrays.asList(linguisticVariableRepo.getVariable(AttributeType.livingArea)), set1, set2, 2);
 
         List<Double> f1 = summary.getF_1();
 
@@ -44,5 +46,7 @@ public class Main {
 
             System.out.println(v);
         }
+
+        System.out.println(quantifierRepo);
     }
 }

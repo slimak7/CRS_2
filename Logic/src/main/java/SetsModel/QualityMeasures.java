@@ -61,7 +61,7 @@ public class QualityMeasures {
                 for (var v:set.getMembershipValuesList()
                 ) {
 
-                    r += v;
+                    r2 += v;
                 }
 
                 m2 = classicSet2.getElements().size();
@@ -100,7 +100,7 @@ public class QualityMeasures {
                     for (var v:set.getMembershipValuesList()
                     ) {
 
-                        r += v;
+                        r2 += v;
                     }
                     m2 = classicSet2.getElements().size();
                 }
@@ -118,7 +118,7 @@ public class QualityMeasures {
                     for (var v:set.getMembershipValuesList()
                     ) {
 
-                        r += v;
+                        r2 += v;
                     }
                     m2 = classicSet2.getElements().size();
 
@@ -137,7 +137,7 @@ public class QualityMeasures {
                     for (var v:set.getMembershipValuesList()
                     ) {
 
-                        r += v;
+                        r2 += v;
                     }
                     m = classicSet1.getElements().size();
                 }
@@ -176,7 +176,7 @@ public class QualityMeasures {
                     measures.add(q.getSet().getFunction().calculateMembership((r / m) / (r / m + r2 / m2)));
                 }
                 measures.add(q.getSet().getFunction().calculateMembership(r / m));
-            } else measures.add(0.0);
+            }
 
         }
 
@@ -185,11 +185,14 @@ public class QualityMeasures {
 
     private FuzzySet andConnection(List<FuzzySet> sets) {
 
-        FuzzySet set = summarizers.get(0).getCurrentFuzzySet();
+        FuzzySet set = sets.get(0);
 
-        for (int i = 1; i < summarizers.size(); i++) {
+        if (sets.size() == 1)
+            return set;
 
-            set = set.sum(summarizers.get(i).getCurrentFuzzySet());
+        for (int i = 1; i < sets.size(); i++) {
+
+            set = set.product(sets.get(i));
         }
 
         return set;

@@ -20,6 +20,9 @@ public class HousesRepo {
         if (attributeType.equals(AttributeType.livingArea))
             return houses.stream().map(x -> x.getLivingArea()).collect(Collectors.toList());
 
+        if (attributeType.equals(AttributeType.kitchenArea))
+            return houses.stream().map(x -> x.getKitchenArea()).collect(Collectors.toList());
+
         //TODO: other cases
 
         return null;

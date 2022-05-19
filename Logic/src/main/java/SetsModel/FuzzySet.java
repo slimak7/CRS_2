@@ -48,6 +48,7 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
     @Override
     public FuzzySet product(FuzzySet s2) {
 
+
         ClassicSet set = classicSet.product(s2.getClassicSet());
 
         Function f = new Function(FuzzyOperationsType.Product, function.getMembershipFunction(),
