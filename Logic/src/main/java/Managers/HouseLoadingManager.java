@@ -38,7 +38,10 @@ public class HouseLoadingManager {
                 values[i] = resultSet.getDouble(i + 2);
             }
 
-            houses.add(new House(id, values));
+            String type = resultSet.getString(12);
+
+
+            houses.add(new House(id, values, type));
 
         }
 

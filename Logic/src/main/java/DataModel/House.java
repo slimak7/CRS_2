@@ -21,9 +21,9 @@ public class House {
     elementarySchoolDistance,
     middleSchoolDistance,
     highSchoolDistance;
-    @Getter String city;
+    @Getter String houseType;
 
-    public House(Integer number, Double values[]) {
+    public House(Integer number, Double values[], String houseType) {
         this.number = number;
 
         price = values[0];
@@ -36,5 +36,7 @@ public class House {
         elementarySchoolDistance = values[7];
         middleSchoolDistance = values[8];
         highSchoolDistance = values[9];
+
+        this.houseType = houseType;
     }
 }

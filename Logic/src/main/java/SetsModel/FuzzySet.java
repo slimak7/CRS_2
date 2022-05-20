@@ -158,5 +158,35 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         return (double) getSupport().getElements().size() / (double) getClassicSet().getElements().size();
     }
 
+    public Double getCardinalValue() {
+
+        if (classicSet == null)
+            return null;
+
+        if (classicSet.getElements().isEmpty())
+            return null;
+
+        Double value = 0.0;
+
+        for (int i = 0; i < membershipValuesList.size(); i++) {
+
+            if (membershipValuesList.get(i).equals(0.0)) {
+
+                value++;
+            }
+        }
+
+        return value;
+    }
+
+    public boolean isNormal () {
+        //TODO:
+        return true;
+    }
+
+    public boolean isConvex() {
+        //TODO:
+        return true;
+    }
 
 }

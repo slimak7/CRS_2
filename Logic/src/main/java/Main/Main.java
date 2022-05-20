@@ -11,9 +11,7 @@ import SetsModel.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
 
@@ -30,23 +28,18 @@ public class Main {
         System.out.println(quantifierRepo);
         System.out.println(linguisticVariableRepo);
 
-        ClassicSet set1 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea), null, false);
-        ClassicSet set2 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.kitchenArea), null, false);
+        ClassicSet set1 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea, "SINGLE_FAMILY"), null, false);
+        ClassicSet set2 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea, "CONDO"), null, false);
+        ClassicSet set3 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.price), null, false);
 
-        linguisticVariableRepo.getVariable(AttributeType.livingArea).setCurrentLabel("niewielkie");
-        linguisticVariableRepo.getVariable(AttributeType.kitchenArea).setCurrentLabel("duże");
-        Summary summary = new Summary(linguisticVariableRepo.getVariable(AttributeType.kitchenArea), quantifierRepo.getAll(),
-                Arrays.asList(linguisticVariableRepo.getVariable(AttributeType.livingArea)), set1, set2, 2);
-
-        List<Double> f1 = summary.getF_1();
-
-        for (var v:f1
-             ) {
+        linguisticVariableRepo.getVariable(AttributeType.price).setCurrentLabel("atrakcyjna");
+        linguisticVariableRepo.getVariable(AttributeType.livingArea).setCurrentLabel("duże");
+        Summary summary = new Summary(linguisticVariableRepo.getVariable(AttributeType.price), quantifierRepo.getAll(),
+                Arrays.asList(linguisticVariableRepo.getVariable(AttributeType.livingArea)), set1, set2, set3, 3,
+                SummaryTypes.multi);
 
 
-            System.out.println(v);
-        }
 
-        System.out.println(quantifierRepo);
+        System.out.println(summary.getT_1Values());
     }
 }
