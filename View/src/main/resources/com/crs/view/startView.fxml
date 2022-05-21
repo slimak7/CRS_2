@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
@@ -23,34 +26,107 @@
          </Label>
       </top>
       <center>
-         <TableView fx:id="HousesTable" prefHeight="449.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
+         <TableView fx:id="HousesTable" prefHeight="380.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
       </center>
       <bottom>
-         <TilePane alignment="TOP_CENTER" prefHeight="314.0" prefWidth="1271.0" style="-fx-background-color: #ffcd82;" BorderPane.alignment="CENTER">
-            <children>
-               <ChoiceBox prefHeight="37.0" prefWidth="285.0">
-                  <opaqueInsets>
-                     <Insets />
-                  </opaqueInsets>
-                  <TilePane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </TilePane.margin>
-               </ChoiceBox>
-               <ChoiceBox prefHeight="37.0" prefWidth="285.0">
-                  <TilePane.margin>
-                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                  </TilePane.margin>
-               </ChoiceBox>
-               <Label text="some controls here">
-                  <font>
-                     <Font size="66.0" />
-                  </font>
-               </Label>
-            </children>
-            <opaqueInsets>
-               <Insets />
-            </opaqueInsets>
-         </TilePane>
+         
+      </bottom>
+      <bottom>
+         <BorderPane prefHeight="541.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+            <top>
+               <TilePane alignment="TOP_CENTER" prefHeight="213.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+                  <children>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ podsumowania" TilePane.alignment="CENTER">
+                       <content>
+                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxSummaryType" layoutX="4.0" layoutY="8.0" onAction="#onSummaryTypeChanged" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                       </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Atrybut - kwalifikator" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxColumnTypeQualifier" layoutX="4.0" layoutY="8.0" onAction="#onColumnQualifierChanged" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Atrybut - sumatyzator" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxColumnTypeSummarizer" layoutX="4.0" layoutY="8.0" onAction="#onColumnSummarizerChanged" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Kwalifikator - etykieta" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxQualifier" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Sumatyzator - etykieta" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxSummarizer" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ mieszkania 1" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxHouseType1" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ mieszkania 2" TilePane.alignment="CENTER">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxHouseType2" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                  </children>
+               </TilePane>
+            </top>
+            <center>
+               <TextArea prefHeight="379.0" prefWidth="1271.0" BorderPane.alignment="CENTER" />
+            </center>
+         </BorderPane>
       </bottom>
    </BorderPane>
 </VBox>

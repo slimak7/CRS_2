@@ -179,6 +179,17 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         return value;
     }
 
+    public boolean contains(ClassicSet set) {
+
+        for (var element:set.getElements()
+             ) {
+
+            if (function.calculateMembership(element) <= 0.0)
+                return false;
+        }
+        return true;
+    }
+
     public boolean isNormal () {
         //TODO:
         return true;

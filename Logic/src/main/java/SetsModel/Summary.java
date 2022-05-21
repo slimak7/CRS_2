@@ -2,6 +2,7 @@ package SetsModel;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,6 +32,59 @@ public class Summary {
     public List<Double> getT_1() {
 
         return qualityMeasures.getT_1();
+    }
+
+    public List<String> getStringSummariesWithAverageT() {
+
+        List<Double> measures = getT_1();
+
+        List<String> summaries = new ArrayList<>();
+
+        for (int i = 0; i < quantifier.size(); i++) {
+
+            String text = "";
+
+            if (summaryType.equals(SummaryTypes.single)) {
+
+                text = quantifier.get(i).name;
+
+                if (multiForm.equals(1)) {
+
+                    text += " domów jest/ma ";
+
+                    text += summarizers.get(0).getString();
+
+                    for (int j = 1; j < summarizers.size(); i++) {
+
+                        text += " i " + summarizers.get(j).getString();
+                    }
+
+
+                } else {
+
+                    text += " domów, które są/mają" + qualifier.getString() + " jest ";
+
+                    text += summarizers.get(0).getString();
+
+                    for (int j = 1; j < summarizers.size(); i++) {
+
+                        text += " i " + summarizers.get(j).getString();
+                    }
+
+                }
+
+
+            } else {
+
+
+            }
+
+            text += "[" + measures.get(i) + "]";
+
+            summaries.add(text);
+        }
+
+        return summaries;
     }
 
     public String getT_1Values() {

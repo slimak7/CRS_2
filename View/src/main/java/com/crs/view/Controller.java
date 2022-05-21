@@ -2,16 +2,22 @@ package com.crs.view;
 
 
 import DataModel.House;
+import Repos.HousesRepo;
+import Repos.LinguisticQuantifierRepo;
+import Repos.LinguisticVariableRepo;
+import SetsModel.AttributeType;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Controller {
+
+    private HousesRepo housesRepo;
+    private LinguisticQuantifierRepo linguisticQuantifierRepo;
+    private LinguisticVariableRepo linguisticVariableRepo;
 
     public static Controller instance;
 
@@ -19,12 +25,50 @@ public class Controller {
     private TableView HousesTable;
 
     @FXML
-    public  void initialize(){
+    ComboBox comboBoxSummaryType;
+
+    @FXML
+    ComboBox comboBoxColumnTypeQualifier;
+
+    @FXML
+    ComboBox comboBoxColumnTypeSummarizer;
+
+    @FXML
+    ComboBox comboBoxQualifier;
+
+    @FXML
+    ComboBox comboBoxSummarizer;
+
+    @FXML
+    ComboBox comboBoxHouseType1;
+
+    @FXML
+    ComboBox comboBoxHouseType2;
+
+    public void initialize(){
 
         instance = this;
+
+        setSummaryTypeOptions();
+        setColumnsTypesQualifier();
+        setColumnsTypesSummarizer();
+        setComboBoxDisabled(comboBoxQualifier, true);
+        setComboBoxDisabled(comboBoxSummarizer, true);
+        setComboBoxDisabled(comboBoxHouseType1, true);
+        setComboBoxDisabled(comboBoxHouseType2, true);
+        setHousesTypes();
     }
 
-    public void ShowHouses(List<House> houses) {
+    public void setObjects(HousesRepo housesRepo, LinguisticVariableRepo variableRepo, LinguisticQuantifierRepo quantifierRepo) {
+
+        this.housesRepo = housesRepo;
+        linguisticVariableRepo = variableRepo;
+        linguisticQuantifierRepo = quantifierRepo;
+
+        showHouses(housesRepo.getHouses());
+    }
+
+    private void showHouses(List<House> houses) {
 
         TableColumn c1 = new TableColumn("Nr");
 
@@ -80,6 +124,100 @@ public class Controller {
         HousesTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         HousesTable.getItems().addAll(houses);
+    }
+
+    private void setSummaryTypeOptions() {
+
+        comboBoxSummaryType.setPromptText("Wybierz typ podsumowania");
+
+        comboBoxSummaryType.getItems().setAll("Podsumowanie jednopodmiotowe typu I",
+                "Podsumowanie jednopodmiotowe typu II",
+                "Podsumowanie wielopodmiotowe typu I",
+                "Podsumowanie wielopodmiotowe typu II",
+                "Podsumowanie wielopodmiotowe typu III",
+                "Podsumowanie wielopodmiotowe typu IV");
+
+    }
+
+    private void setColumnsTypesQualifier () {
+
+        comboBoxColumnTypeQualifier.setPromptText("Wybierz atrybut");
+
+        for (var v: AttributeType.values()
+             ) {
+
+            comboBoxColumnTypeQualifier.getItems().add(v.toString());
+        }
+
+    }
+
+    private void setColumnsTypesSummarizer () {
+
+        comboBoxColumnTypeSummarizer.setPromptText("Wybierz atrybut");
+
+        for (var v: AttributeType.values()
+        ) {
+
+            comboBoxColumnTypeSummarizer.getItems().add(v.toString());
+        }
+
+    }
+
+    private void setHousesTypes() {
+
+        setComboBoxElements(comboBoxHouseType1, Arrays.asList("CONDO", "SINGLE_FAMILY", "TOWNHOUSE"), "Wybierz typ domu");
+        setComboBoxElements(comboBoxHouseType2, Arrays.asList("CONDO", "SINGLE_FAMILY", "TOWNHOUSE"), "Wybierz typ domu");
+    }
+
+    public void setComboBoxDisabled(ComboBox comboBox, boolean disabled) {
+
+        comboBox.setDisable(disabled);
+    }
+
+    private void setComboBoxElements (ComboBox comboBox, List<String> elements, String defaultText) {
+
+        comboBox.getItems().clear();
+        comboBox.setPromptText(defaultText);
+        comboBox.getItems().addAll(elements);
+    }
+
+    @FXML
+    public void onColumnQualifierChanged () {
+
+        setComboBoxDisabled(comboBoxQualifier, false);
+
+        List<String> labels = linguisticVariableRepo.getVariable(comboBoxColumnTypeQualifier.getSelectionModel().getSelectedIndex()).getAllLabels();
+
+        setComboBoxDisabled(comboBoxQualifier, false);
+        setComboBoxElements(comboBoxQualifier, labels, "Wybierz etykietę kwalifikatora");
+
+
+    }
+
+    @FXML
+    public void onColumnSummarizerChanged () {
+
+        setComboBoxDisabled(comboBoxSummarizer, false);
+
+        List<String> labels = linguisticVariableRepo.getVariable(comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex()).getAllLabels();
+
+        setComboBoxDisabled(comboBoxSummarizer, false);
+        setComboBoxElements(comboBoxSummarizer, labels, "Wybierz etykietę sumatyzatora");
+
+    }
+
+    public void onSummaryTypeChanged() {
+
+        if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() > 1) {
+
+            setComboBoxDisabled(comboBoxHouseType1, false);
+            setComboBoxDisabled(comboBoxHouseType2, false);
+        }
+        else
+        {
+            setComboBoxDisabled(comboBoxHouseType1, true);
+            setComboBoxDisabled(comboBoxHouseType2, true);
+        }
     }
 
 }

@@ -59,4 +59,18 @@ public class LinguisticVariable {
         return sets;
     }
 
+    public String getString() {
+
+        return currentLabel + " " + attributeType.toString();
+    }
+
+    public List<String> getAllLabels() {
+
+        List<String> labels = new ArrayList<>();
+
+        this.labels.forEach((key, value) -> labels.add(key));
+
+        return labels;
+    }
+
 }

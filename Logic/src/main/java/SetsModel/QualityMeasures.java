@@ -205,7 +205,7 @@ public class QualityMeasures {
 
                     if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.relative)) {
 
-                        measures.add(q.getSet().getFunction().getMembershipFunction().calculateMembership((r/m) / ((r/m) + (r2/m2))));
+                        measures.add(q.getSet().getFunction().calculateMembership((r/m) / ((r/m) + (r2/m2))));
                     }
                     else {
                         measures.add(0.0);
