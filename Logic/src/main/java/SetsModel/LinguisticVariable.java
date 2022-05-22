@@ -73,4 +73,9 @@ public class LinguisticVariable {
         return labels;
     }
 
+    public FuzzySet getFuzzySet(Integer index) {
+
+        return getAllFuzzySets().get(index);
+    }
+
 }

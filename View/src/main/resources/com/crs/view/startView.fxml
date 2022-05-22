@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -12,31 +13,31 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="913.0" prefWidth="1311.0" spacing="20.0" styleClass="Title" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.crs.view.Controller">
+<VBox alignment="CENTER" prefHeight="913.0" prefWidth="1311.0" spacing="20.0" style="-fx-background-color: #74a4bc;" styleClass="Title" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.crs.view.Controller">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <BorderPane prefHeight="905.0" prefWidth="1271.0">
+   <BorderPane prefHeight="905.0" prefWidth="1271.0" style="-fx-background-color: #a5ffd6;">
       <top>
       
-          <Label id="Title" fx:id="welcomeText" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="253.0" style="-fx-background-color: #eb4c34; -fx-border-width: 5; -fx-border-color: #000000; -fx-border-radius: 25; -fx-background-radius: 25;" text="KSR - zadanie 2." textFill="WHITE" BorderPane.alignment="CENTER">
+          <Label id="Title" fx:id="welcomeText" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="253.0" style="-fx-background-color: #eb4c34; -fx-border-width: 5; -fx-border-color: #000000; -fx-border-radius: 25; -fx-background-radius: 25;" text="KSR - zadanie 2." BorderPane.alignment="CENTER">
             <font>
                <Font name="Calibri Bold" size="24.0" />
             </font>
          </Label>
       </top>
       <center>
-         <TableView fx:id="HousesTable" prefHeight="380.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
+         <TableView fx:id="HousesTable" prefHeight="235.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
       </center>
       <bottom>
          
       </bottom>
       <bottom>
-         <BorderPane prefHeight="541.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+         <BorderPane prefHeight="541.0" prefWidth="1271.0" style="-fx-background-color: #84dcc6;" BorderPane.alignment="CENTER">
             <top>
-               <TilePane alignment="TOP_CENTER" prefHeight="213.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+               <TilePane alignment="TOP_CENTER" prefHeight="203.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
                   <children>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ podsumowania" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Typ podsumowania" TilePane.alignment="CENTER">
                        <content>
                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -48,7 +49,7 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Atrybut - kwalifikator" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut - kwalifikator" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -60,7 +61,7 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Atrybut - sumatyzator" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut - sumaryzator" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -72,7 +73,7 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Kwalifikator - etykieta" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Kwalifikator - etykieta" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -84,11 +85,11 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Sumatyzator - etykieta" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Sumaryzator - etykieta 1" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
-                                 <ComboBox fx:id="comboBoxSummarizer" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                                 <ComboBox fx:id="comboBoxSummarizer1" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
                               </children>
                            </AnchorPane>
                         </content>
@@ -96,7 +97,31 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ mieszkania 1" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Sumaryzator - spójnik">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxConnector" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Sumatyzator - etykieta 2">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxSummarizer2" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                        <TilePane.margin>
+                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Typ mieszkania 1" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -108,7 +133,7 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" text="Typ mieszkania 2" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Typ mieszkania 2" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
@@ -124,8 +149,21 @@
                </TilePane>
             </top>
             <center>
-               <TextArea prefHeight="379.0" prefWidth="1271.0" BorderPane.alignment="CENTER" />
+               <TextArea fx:id="textArea" prefHeight="248.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+                  <font>
+                     <Font size="20.0" />
+                  </font></TextArea>
             </center>
+            <bottom>
+               <Button mnemonicParsing="false" onAction="#generate" prefHeight="40.0" prefWidth="100.0" text="Generuj" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                  <BorderPane.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  </BorderPane.margin>
+                  <font>
+                     <Font name="System Bold" size="18.0" />
+                  </font>
+               </Button>
+            </bottom>
          </BorderPane>
       </bottom>
    </BorderPane>

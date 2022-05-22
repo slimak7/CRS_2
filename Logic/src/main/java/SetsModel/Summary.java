@@ -8,25 +8,31 @@ import java.util.List;
 
 public class Summary {
 
-    @Getter LinguisticVariable qualifier;
-    @Getter List<LinguisticQuantifier> quantifier;
-    @Getter List<LinguisticVariable> summarizers;
-    @Getter private ClassicSet classicSet1;
-    @Getter private ClassicSet classicSet2;
-    @Getter Integer multiForm;
-    @Getter SummaryTypes summaryType;
-    private QualityMeasures qualityMeasures;
+    @Getter private LinguisticVariable qualifier;
+    @Getter private List<LinguisticQuantifier> quantifier;
+    @Getter private List<LinguisticVariable> summarizers;
+    @Getter private ClassicSet classicSetP1;
+    @Getter private ClassicSet classicSetP2;
+    @Getter private ClassicSet classicSetW;
+    @Getter private Integer multiForm;
+    @Getter private SummaryTypes summaryType;
+    @Getter private QualityMeasures qualityMeasures;
+    @Getter private Connector connector;
 
-    public Summary(LinguisticVariable qualifier, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, ClassicSet classicSetP1, ClassicSet classicSetP2, ClassicSet classicSetW, Integer multiForm, SummaryTypes summaryType) {
+
+    public Summary(LinguisticVariable qualifier, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, ClassicSet classicSetP1, ClassicSet classicSetP2, ClassicSet classicSetW, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector) {
         this.qualifier = qualifier;
         this.quantifier = quantifier;
         this.summarizers = summarizers;
-        this.classicSet1 = classicSet1;
-        this.classicSet2 = classicSet2;
+        this.classicSetP1 = classicSetP1;
+        this.classicSetP2 = classicSetP2;
+        this.classicSetW = classicSetW;
         this.multiForm = multiForm;
         this.summaryType = summaryType;
+        this.qualityMeasures = qualityMeasures;
+        this.connector = connector;
 
-        qualityMeasures = new QualityMeasures(summarizers, quantifier, qualifier, classicSetP1, classicSetP2, classicSetW, multiForm, summaryType);
+        this.qualityMeasures = new QualityMeasures(summarizers, connector, quantifier, qualifier, classicSetP1, classicSetP2, classicSetW, multiForm, summaryType);
     }
 
     public List<Double> getT_1() {
@@ -54,21 +60,22 @@ public class Summary {
 
                     text += summarizers.get(0).getString();
 
-                    for (int j = 1; j < summarizers.size(); i++) {
 
-                        text += " i " + summarizers.get(j).getString();
+                    for (int j = 1; j < summarizers.size(); j++) {
+
+                        text += " " + connector.toString() + " " + summarizers.get(j).getString();
                     }
 
 
                 } else {
 
-                    text += " domów, które są/mają" + qualifier.getString() + " jest ";
+                    text += " domów, które są/mają " + qualifier.getString() + " jest/ma ";
 
                     text += summarizers.get(0).getString();
 
-                    for (int j = 1; j < summarizers.size(); i++) {
+                    for (int j = 1; j < summarizers.size(); j++) {
 
-                        text += " i " + summarizers.get(j).getString();
+                        text += " " + connector.toString() + " " + summarizers.get(j).getString();
                     }
 
                 }
@@ -99,5 +106,14 @@ public class Summary {
         }
 
         return s;
+    }
+
+
+
+    private List<Double> getAverageMeasures() {
+
+        List<Double> measures = new ArrayList<>();
+
+        return measures;
     }
 }

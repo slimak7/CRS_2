@@ -28,18 +28,6 @@ public class Main {
         System.out.println(quantifierRepo);
         System.out.println(linguisticVariableRepo);
 
-        ClassicSet set1 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea, "SINGLE_FAMILY"), null, false);
-        ClassicSet set2 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.livingArea, "CONDO"), null, false);
-        ClassicSet set3 = new ClassicSet(housesRepo.getValuesOfAttribute(AttributeType.price), null, false);
 
-        linguisticVariableRepo.getVariable(AttributeType.price).setCurrentLabel("atrakcyjna");
-        linguisticVariableRepo.getVariable(AttributeType.livingArea).setCurrentLabel("duże");
-        Summary summary = new Summary(linguisticVariableRepo.getVariable(AttributeType.price), quantifierRepo.getAll(),
-                Arrays.asList(linguisticVariableRepo.getVariable(AttributeType.livingArea)), set1, set2, set3, 3,
-                SummaryTypes.multi);
-
-
-
-        System.out.println(summary.getT_1Values());
     }
 }

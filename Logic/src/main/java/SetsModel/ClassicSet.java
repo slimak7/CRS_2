@@ -104,6 +104,8 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
     @Override
     public ClassicSet product(ClassicSet s2) {
 
+
+
         ClassicSet s1 = this;
         Set<Double> elements = new HashSet<>();
 

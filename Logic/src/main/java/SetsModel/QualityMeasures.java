@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class QualityMeasures {
 
     @Getter private List<LinguisticVariable> summarizers;
+    @Getter private Connector connector;
     @Getter private List<LinguisticQuantifier> quantifiers;
     @Getter private LinguisticVariable qualifier;
     @Getter private ClassicSet classicSetP1;
@@ -30,12 +31,9 @@ public class QualityMeasures {
 
         if (summaryType.equals(SummaryTypes.single)) {
 
-            for (var sum : summarizers
-            ) {
-                sum.getCurrentFuzzySet().setClassicSet(classicSetP2);
-            }
 
-            FuzzySet sumSet = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+            FuzzySet sumSet = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+            sumSet.setClassicSet(classicSetP2);
 
             if (multiForm.equals(1)) {
 
@@ -72,23 +70,18 @@ public class QualityMeasures {
 
             if (multiForm.equals(1)) {
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-                }
 
-                FuzzySet sumSet1 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+
+                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet1.setClassicSet(classicSetP1);
 
                 r = sumSet1.getCardinalValue();
 
                 m = Double.valueOf(classicSetP1.getElements().size());
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP2);
-                }
 
-                FuzzySet sumSet2 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet2.setClassicSet(classicSetP2);
 
                 r2 = sumSet2.getCardinalValue();
 
@@ -97,23 +90,16 @@ public class QualityMeasures {
             }
             if (multiForm.equals(2)) {
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-                }
 
-                FuzzySet sumSet1 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet1.setClassicSet(classicSetP1);
 
                 r = sumSet1.getCardinalValue();
 
                 m = Double.valueOf(classicSetP1.getElements().size());
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP2);
-                }
-
-                FuzzySet sumSet2 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet2.setClassicSet(classicSetP2);
 
                 qualifier.getCurrentFuzzySet().setClassicSet(classicSetW);
 
@@ -127,12 +113,9 @@ public class QualityMeasures {
             }
             if (multiForm.equals(3)) {
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-                }
 
-                FuzzySet sumSet1 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet1.setClassicSet(classicSetP1);
 
                 qualifier.getCurrentFuzzySet().setClassicSet(classicSetW);
 
@@ -144,12 +127,10 @@ public class QualityMeasures {
 
                 m = Double.valueOf(classicSetP1.getElements().size());
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP2);
-                }
 
-                FuzzySet sumSet2 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+
+                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet2.setClassicSet(classicSetP2);
 
                 r2 = sumSet2.getCardinalValue();
 
@@ -158,22 +139,18 @@ public class QualityMeasures {
             }
             if (multiForm.equals(4)) {
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-                }
 
-                FuzzySet sumSet1 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+
+                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet1.setClassicSet(classicSetP1);
 
                 r = sumSet1.getCardinalValue();
                 m = Double.valueOf(classicSetP1.getElements().size());
 
-                for (var sum : summarizers
-                ) {
-                    sum.getCurrentFuzzySet().setClassicSet(classicSetP2);
-                }
 
-                FuzzySet sumSet2 = andConnection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+
+                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
+                sumSet2.setClassicSet(classicSetP2);
 
                 r2 = sumSet1.getCardinalValue();
                 m2 = Double.valueOf(classicSetP2.getElements().size());
@@ -225,7 +202,7 @@ public class QualityMeasures {
         return measures;
     }
 
-    private FuzzySet andConnection(List<FuzzySet> sets) {
+    private FuzzySet connection(List<FuzzySet> sets) {
 
         FuzzySet set = sets.get(0);
 
@@ -234,7 +211,10 @@ public class QualityMeasures {
 
         for (int i = 1; i < sets.size(); i++) {
 
-            set = set.product(sets.get(i));
+            if (connector.equals(Connector.or))
+                set = set.sum(sets.get(i));
+            else
+                set = set.product(sets.get(i));
         }
 
         return set;
@@ -276,7 +256,7 @@ public class QualityMeasures {
 
         }
 
-        FuzzySet set = andConnection(summarizers.stream().map(LinguisticVariable::getCurrentFuzzySet).collect(Collectors.toList()));
+        FuzzySet set = connection(summarizers.stream().map(LinguisticVariable::getCurrentFuzzySet).collect(Collectors.toList()));
 
         for (int i = 0; i < classicSetP1.getElements().size(); i++) {
 

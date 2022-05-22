@@ -35,28 +35,24 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
     @Override
     public FuzzySet sum(FuzzySet s2) {
 
-        ClassicSet set = classicSet.sum(s2.getClassicSet());
 
         Function f = new Function(FuzzyOperationsType.Sum, function.getMembershipFunction(),
                 s2.getFunction());
 
         boolean c = isComplement || s2.isComplement();
 
-        return new FuzzySet(set, f, c);
+        return new FuzzySet(classicSet, f, c);
     }
 
     @Override
     public FuzzySet product(FuzzySet s2) {
-
-
-        ClassicSet set = classicSet.product(s2.getClassicSet());
 
         Function f = new Function(FuzzyOperationsType.Product, function.getMembershipFunction(),
                 s2.getFunction());
 
         boolean c = isComplement || s2.isComplement();
 
-        return new FuzzySet(set, f, c);
+        return new FuzzySet(classicSet, f, c);
     }
 
     private List<Double> getMembershipValues() {

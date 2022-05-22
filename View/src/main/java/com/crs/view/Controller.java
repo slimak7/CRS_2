@@ -6,6 +6,8 @@ import Repos.HousesRepo;
 import Repos.LinguisticQuantifierRepo;
 import Repos.LinguisticVariableRepo;
 import SetsModel.AttributeType;
+import SetsModel.Connector;
+import SetsModel.SummaryTypes;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,13 +39,22 @@ public class Controller {
     ComboBox comboBoxQualifier;
 
     @FXML
-    ComboBox comboBoxSummarizer;
+    ComboBox comboBoxSummarizer1;
+
+    @FXML
+    ComboBox comboBoxSummarizer2;
 
     @FXML
     ComboBox comboBoxHouseType1;
 
     @FXML
     ComboBox comboBoxHouseType2;
+
+    @FXML
+    ComboBox comboBoxConnector;
+
+    @FXML
+    TextArea textArea;
 
     public void initialize(){
 
@@ -53,7 +64,9 @@ public class Controller {
         setColumnsTypesQualifier();
         setColumnsTypesSummarizer();
         setComboBoxDisabled(comboBoxQualifier, true);
-        setComboBoxDisabled(comboBoxSummarizer, true);
+        setComboBoxDisabled(comboBoxSummarizer1, true);
+        setComboBoxDisabled(comboBoxSummarizer2, true);
+        setComboBoxDisabled(comboBoxConnector, true);
         setComboBoxDisabled(comboBoxHouseType1, true);
         setComboBoxDisabled(comboBoxHouseType2, true);
         setHousesTypes();
@@ -197,12 +210,18 @@ public class Controller {
     @FXML
     public void onColumnSummarizerChanged () {
 
-        setComboBoxDisabled(comboBoxSummarizer, false);
+        setComboBoxDisabled(comboBoxSummarizer1, false);
 
         List<String> labels = linguisticVariableRepo.getVariable(comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex()).getAllLabels();
 
-        setComboBoxDisabled(comboBoxSummarizer, false);
-        setComboBoxElements(comboBoxSummarizer, labels, "Wybierz etykietę sumatyzatora");
+        setComboBoxDisabled(comboBoxSummarizer1, false);
+        setComboBoxElements(comboBoxSummarizer1, labels, "Wybierz etykietę sumaryzatora");
+
+        setComboBoxDisabled(comboBoxSummarizer2, false);
+        setComboBoxElements(comboBoxSummarizer2, labels, "Wybierz etykietę sumaryzatora");
+
+        setComboBoxDisabled(comboBoxConnector, false);
+        setComboBoxElements(comboBoxConnector, Arrays.asList("i", "lub"), "Wybierz spójnik");
 
     }
 
@@ -218,6 +237,152 @@ public class Controller {
             setComboBoxDisabled(comboBoxHouseType1, true);
             setComboBoxDisabled(comboBoxHouseType2, true);
         }
+    }
+
+    @FXML
+    public void generate() {
+
+        if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() > -1) {
+
+            if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() > -1) {
+
+                if (comboBoxColumnTypeQualifier.getSelectionModel().getSelectedIndex() > -1 || comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 0) {
+
+                    if (comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex() > -1) {
+
+                        if (comboBoxQualifier.getSelectionModel().getSelectedIndex() > -1 || comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 0) {
+
+                            if (comboBoxSummarizer1.getSelectionModel().getSelectedIndex() > -1) {
+
+                                if (comboBoxSummarizer2.getSelectionModel().getSelectedIndex() > -1){
+
+                                    if (comboBoxConnector.getSelectionModel().getSelectedIndex() > -1) {
+
+                                        if ((comboBoxHouseType1.getSelectionModel().getSelectedIndex() < -1 || comboBoxHouseType2.getSelectionModel().getSelectedIndex() < -1)
+                                        && comboBoxSummaryType.getSelectionModel().getSelectedIndex() > 1) {
+
+                                            showAlert(Alert.AlertType.ERROR, "Błąd", "Miasta nie poprawnie wybrane");
+                                            return;
+                                        }
+                                        else {
+
+                                            Connector connector = null;
+
+                                            if (comboBoxConnector.getSelectionModel().getSelectedIndex() == 0) {
+
+                                                connector = Connector.and;
+                                            }
+                                            else {
+                                                connector = Connector.or;
+                                            }
+
+                                            if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 0) {
+                                                //pods. jednop. I typu z wieloma sum
+
+                                                Application.instance.generateSummary(SummaryTypes.single, 1, -1, null, comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex(),
+                                                        Arrays.asList((String) comboBoxSummarizer1.getSelectionModel().getSelectedItem(),
+                                                                (String) comboBoxSummarizer2.getSelectionModel().getSelectedItem()), connector);
+                                            }
+                                            if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 1) {
+
+                                                //pods. jednop. II typu z wieloma sum
+                                                Application.instance.generateSummary(SummaryTypes.single, 2, comboBoxColumnTypeQualifier.getSelectionModel().getSelectedIndex(),
+                                                        (String) comboBoxQualifier.getSelectionModel().getSelectedItem(), comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex(),
+                                                        Arrays.asList((String) comboBoxSummarizer1.getSelectionModel().getSelectedItem(),
+                                                                (String) comboBoxSummarizer2.getSelectionModel().getSelectedItem()), connector);
+
+                                            }
+                                            if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() >= 2) {
+
+                                                //TODO: pods. wielopodmio z wieloma sum
+                                            }
+
+
+                                        }
+                                    }
+                                    else {
+
+                                        showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano spójnika");
+                                        return;
+                                    }
+                                }
+                                else {
+
+                                    if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 0) {
+
+                                        //pods. jednop. I typu z jednym sum
+
+                                        Application.instance.generateSummary(SummaryTypes.single, 1, -1, null, comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex(),
+                                                Arrays.asList((String) comboBoxSummarizer1.getSelectionModel().getSelectedItem()), null);
+                                    }
+                                    if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() == 1) {
+
+                                        //pods. jednop. II typu z jednym sum
+
+                                        Application.instance.generateSummary(SummaryTypes.single, 2, comboBoxColumnTypeQualifier.getSelectionModel().getSelectedIndex(),
+                                                (String) comboBoxQualifier.getSelectionModel().getSelectedItem(), comboBoxColumnTypeSummarizer.getSelectionModel().getSelectedIndex(),
+                                                Arrays.asList((String) comboBoxSummarizer1.getSelectionModel().getSelectedItem()), null);
+                                    }
+                                    else
+                                    {
+                                        if (comboBoxHouseType1.getSelectionModel().getSelectedIndex() < -1 || comboBoxHouseType2.getSelectionModel().getSelectedIndex() < -1) {
+
+                                            showAlert(Alert.AlertType.ERROR, "Błąd", "Miasta nie poprawnie wybrane");
+                                            return;
+                                        }
+                                        else {
+
+                                            //TODO: podsum. wielopod. z jedn sum
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano etykiety - sumaryzator");
+                                return;
+                            }
+                        }
+                        else {
+                            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano atykiety - kwalifikator");
+                            return;
+                        }
+                    }
+                    else {
+                        showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano atrybutu - sumaryzator");
+                        return;
+                    }
+                }
+                else
+                {
+                    showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano atrybutu - kwalifikator");
+                    return;
+                }
+            }
+
+        }
+        else {
+            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano typu podsumowania");
+            return;
+        }
+
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+
+            }
+        });
+    }
+
+    public void showSummary(String text) {
+
+        textArea.setText(text);
     }
 
 }
