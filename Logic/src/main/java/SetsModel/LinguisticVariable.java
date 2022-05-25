@@ -40,6 +40,11 @@ public class LinguisticVariable {
         currentLabels.addAll(getLabelsWithIndexes(Arrays.asList(index)));
     }
 
+    public void addCurrentLabel(List<Integer> indexes) {
+
+        currentLabels.addAll(getLabelsWithIndexes(indexes));
+    }
+
     public void addLabel(String label, FuzzySet set) {
 
         labels.put(label, set);
@@ -83,11 +88,15 @@ public class LinguisticVariable {
             }
         });
 
-
+        int i = 0;
         for (var label:s
              ) {
             text += label;
 
+            if (i >= 0 && i < s.size()-1)
+                text += " i ";
+
+            i++;
         }
 
         return text + " " + attributeType.toString();

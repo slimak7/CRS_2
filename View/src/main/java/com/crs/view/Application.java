@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import org.apache.commons.math3.util.CombinatoricsUtils;
+import org.paukov.combinatorics3.Generator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static SetsModel.FuzzyOperationsType.Product;
 
@@ -101,25 +103,25 @@ public class Application extends javafx.application.Application {
                     }
                 }
 
-                Integer s1 = variables.get(0).getLabels().size();
-                Integer s2 = 0;
+                List<List<Integer>> combinationSum1 = generateAllLabelsCombinations(variables.get(0).getAllLabels().size(), 2);
+                List<List<Integer>> combinationSum2 = new ArrayList<>();
 
                 if (variables.size() > 1)
-                    s2 = variables.get(1).getLabels().size();
+                    combinationSum2 = generateAllLabelsCombinations(variables.get(1).getAllLabels().size(), 2);
 
                 switch(multiType){
 
                     case 1 -> {
 
-                        for (int i = 0; i < s1; i++) {
+                        for (int i = 0; i < combinationSum1.size(); i++) {
 
                             variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(i);
+                            variables.get(0).addCurrentLabel(combinationSum1.get(i));
 
-                            for (int j = 0; j < s2; j++) {
+                            for (int j = 0; j < combinationSum2.size(); j++) {
 
                                 variables.get(1).clearCurrentLabels();
-                                variables.get(1).addCurrentLabel(j);
+                                variables.get(1).addCurrentLabel(combinationSum2.get(j));
 
 
                                 SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll()).build();
@@ -127,45 +129,60 @@ public class Application extends javafx.application.Application {
                                 summaryRepo.addAll(summary.getStringSummariesWithAverageT());
                             }
 
-                            SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(linguisticQuantifierRepo.getAll()).build();
+                            if (variables.size() == 1) {
+                                SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(linguisticQuantifierRepo.getAll()).build();
 
-                            summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                            }
 
                         }
                     }
                     case 2 -> {
 
+
                         qualifier.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier.getAttributeType()),
                                 qualifier.getSpace(), false));
 
-                        for (int i = 0; i < s1; i++) {
+                        List<List<Integer>> combinationQ = generateAllLabelsCombinations(qualifier.getAllLabels().size(), 2);
+
+                        for (int i = 0; i < combinationSum1.size(); i++) {
 
                             variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(i);
+                            variables.get(0).addCurrentLabel(combinationSum1.get(i));
 
-                            for (int j = 0; j < s2; j++) {
+                            for (int k = 0; k < combinationQ.size(); k++) {
 
+                                qualifier.clearCurrentLabels();
+                                qualifier.addCurrentLabel(combinationQ.get(k));
 
-                                Integer k;
-                                for (k = 0; k < qualifier.getAllLabels().size(); k++) {
-
-                                    qualifier.clearCurrentLabels();
-                                    qualifier.addCurrentLabel(k);
+                                for (int j = 0; j < combinationSum2.size(); j++) {
 
                                     variables.get(1).clearCurrentLabels();
-                                    variables.get(1).addCurrentLabel(j);
+                                    variables.get(1).addCurrentLabel(combinationSum2.get(j));
 
 
-                                    SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll()).
-                                            withQualifier(qualifier).build();
+                                    SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll())
+                                            .withQualifier(qualifier).build();
 
                                     summaryRepo.addAll(summary.getStringSummariesWithAverageT());
                                 }
 
+                                if (variables.size() == 1) {
+                                    SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
+                                            withQuantifier(linguisticQuantifierRepo.getAll())
+                                            .withQualifier(qualifier).build();
+
+                                    summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                }
                             }
+
                         }
+
                     }
                 }
+            }
+            case multi -> {
+
             }
         }
 
@@ -177,6 +194,21 @@ public class Application extends javafx.application.Application {
         launch();
     }
 
+    private List<List<Integer>> generateAllLabelsCombinations(Integer n, Integer r) {
+
+        List<Integer> values = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+
+            values.add(i);
+        }
+
+        List<List<Integer>> combinationR = Generator.combination(values).simple(r).stream().toList();
+
+        List<List<Integer>> combinationOne = Generator.combination(values).simple(1).stream().toList();
+
+        return Stream.concat(combinationR.stream(), combinationOne.stream()).collect(Collectors.toList());
+    }
 
 
     private List<LinguisticVariable> getSummarizersLinguisticVariables(List<Integer> summarizersIndexes) {

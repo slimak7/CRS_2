@@ -52,24 +52,9 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
         boolean c = isComplement || s2.isComplement();
 
-        if (operationType == FuzzyOperationsType.None) {
 
-            return new FuzzySet(classicSet, function, c, FuzzyOperationsType.Sum, s2);
-        }
-        else {
 
-            FuzzySet lastSet = set;
-
-            while (lastSet.getSet() != null) {
-
-                lastSet = lastSet.getSet();
-            }
-
-            lastSet.setSet(s2);
-            lastSet.setOperationType(FuzzyOperationsType.Sum);
-
-            return new FuzzySet(classicSet, function, isComplement, operationType, set);
-        }
+        return new FuzzySet(s2.getClassicSet(), s2.getFunction(), c, FuzzyOperationsType.Sum, this);
     }
 
     @Override
@@ -77,24 +62,11 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
 
         boolean c = isComplement || s2.isComplement();
 
-        if (operationType == FuzzyOperationsType.None) {
 
-            return new FuzzySet(classicSet, function, c, FuzzyOperationsType.Product, s2);
-        }
-        else {
 
-            FuzzySet lastSet = set;
+        return new FuzzySet(s2.getClassicSet(), s2.getFunction(), c, FuzzyOperationsType.Product, this);
 
-            while (lastSet.getSet() != null) {
 
-                lastSet = lastSet.getSet();
-            }
-
-            lastSet.setSet(s2);
-            lastSet.setOperationType(FuzzyOperationsType.Product);
-
-            return this;
-        }
     }
 
     private List<Double> getMembershipValues() {
