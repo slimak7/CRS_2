@@ -11,6 +11,7 @@ module com.crs.view {
     requires eu.hansolo.tilesfx;
     requires Logic;
     requires java.sql;
+    requires commons.math3;
 
 
     opens com.crs.view to javafx.fxml;

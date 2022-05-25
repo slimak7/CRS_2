@@ -62,7 +62,7 @@ public class QuantifiersLoadingManager {
                 Double r = v.get("params").get("r").doubleValue();
 
                 repo.addQuantifier(new LinguisticQuantifier(LinguisticQuantifiersTypes.relative, labelName, fuzzySetBuilder.
-                        withFunction(new Function(FuzzyOperationsType.None, new GaussianFunction(m, s, l, r), null)).
+                        withFunction(new GaussianFunction(m, s, l, r)).
                         withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).build()));
             }
             if (type.equals("trapezoidal")) {
@@ -73,7 +73,7 @@ public class QuantifiersLoadingManager {
                 Double d = v.get("params").get("d").doubleValue();
 
                 repo.addQuantifier(new LinguisticQuantifier(LinguisticQuantifiersTypes.relative, labelName, fuzzySetBuilder.
-                        withFunction(new Function(FuzzyOperationsType.None, new TrapezoidalFunction(a, b, c, d), null)).
+                        withFunction(new TrapezoidalFunction(a, b, c, d)).
                         withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).build()));
             }
             
@@ -107,7 +107,7 @@ public class QuantifiersLoadingManager {
                 Double r = v.get("params").get("r").doubleValue();
 
                 repo.addQuantifier(new LinguisticQuantifier(LinguisticQuantifiersTypes.absolute, labelName, fuzzySetBuilder.
-                        withFunction(new Function(FuzzyOperationsType.None, new GaussianFunction(m, s, l, r), null)).
+                        withFunction(new GaussianFunction(m, s, l, r)).
                         withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).build()));
             }
             if (type.equals("trapezoidal")) {
@@ -118,7 +118,7 @@ public class QuantifiersLoadingManager {
                 Double d = v.get("params").get("d").doubleValue();
 
                 repo.addQuantifier(new LinguisticQuantifier(LinguisticQuantifiersTypes.absolute, labelName, fuzzySetBuilder.
-                        withFunction(new Function(FuzzyOperationsType.None, new TrapezoidalFunction(a, b, c, d), null)).
+                        withFunction(new TrapezoidalFunction(a, b, c, d)).
                         withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).build()));
             }
 

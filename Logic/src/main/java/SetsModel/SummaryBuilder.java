@@ -6,9 +6,6 @@ public final class SummaryBuilder {
     private LinguisticVariable qualifier;
     private List<LinguisticQuantifier> quantifier;
     private List<LinguisticVariable> summarizers;
-    private ClassicSet classicSetP1;
-    private ClassicSet classicSetP2;
-    private ClassicSet classicSetW;
     private Integer multiForm;
     private SummaryTypes summaryType;
     private QualityMeasures qualityMeasures;
@@ -36,21 +33,6 @@ public final class SummaryBuilder {
         return this;
     }
 
-    public SummaryBuilder withClassicSetP1(ClassicSet classicSetP1) {
-        this.classicSetP1 = classicSetP1;
-        return this;
-    }
-
-    public SummaryBuilder withClassicSetP2(ClassicSet classicSetP2) {
-        this.classicSetP2 = classicSetP2;
-        return this;
-    }
-
-    public SummaryBuilder withClassicSetW(ClassicSet classicSetW) {
-        this.classicSetW = classicSetW;
-        return this;
-    }
-
     public SummaryBuilder withMultiForm(Integer multiForm) {
         this.multiForm = multiForm;
         return this;
@@ -71,7 +53,7 @@ public final class SummaryBuilder {
         return this;
     }
 
-    public Summary build() {
-        return new Summary(qualifier, quantifier, summarizers, classicSetP1, classicSetP2, classicSetW, multiForm, summaryType, qualityMeasures, connector);
+    public SummaryMaker build() {
+        return new SummaryMaker(qualifier, quantifier, summarizers, multiForm, summaryType, qualityMeasures, connector);
     }
 }

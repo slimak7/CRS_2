@@ -1,13 +1,10 @@
 package SetsModel;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ToString
 public class LinguisticVariable {
@@ -16,23 +13,31 @@ public class LinguisticVariable {
 
     @Getter private Map<String, FuzzySet> labels;
 
-    @Getter  private String currentLabel;
+    @Getter private List<String> currentLabels;
 
 
     public LinguisticVariable(AttributeType attributeType, Map<String, FuzzySet> labels, String currentLabel) {
         this.attributeType = attributeType;
         this.labels = labels;
-        this.currentLabel = currentLabel;
+
+        currentLabels = new ArrayList<String>();
+        currentLabels.add(currentLabel);
     }
 
     public LinguisticVariable(AttributeType attributeType) {
 
         this.attributeType = attributeType;
         labels = new LinkedHashMap<>();
+        currentLabels = new ArrayList<>();
     }
 
-    public void setCurrentLabel(String name) {
-        currentLabel = name;
+    public void addCurrentLabel(String name) {
+        currentLabels.add(name);
+    }
+
+    public void addCurrentLabel(Integer index) {
+
+        currentLabels.addAll(getLabelsWithIndexes(Arrays.asList(index)));
     }
 
     public void addLabel(String label, FuzzySet set) {
@@ -45,9 +50,17 @@ public class LinguisticVariable {
         return labels.get(label);
     }
 
-    public FuzzySet getCurrentFuzzySet() {
+    public List<FuzzySet> getCurrentFuzzySet() {
 
-        return labels.get(currentLabel);
+        List<FuzzySet> fuzzySets = new ArrayList<>();
+
+        labels.forEach((key, value) -> {
+
+            if (currentLabels.contains(key))
+                fuzzySets.add(value);
+        });
+
+        return fuzzySets;
     }
 
     public List<FuzzySet> getAllFuzzySets () {
@@ -61,7 +74,23 @@ public class LinguisticVariable {
 
     public String getString() {
 
-        return currentLabel + " " + attributeType.toString();
+        List<String> s = new ArrayList<>();
+        String text = "";
+
+        this.labels.forEach((key, value) -> {
+            if (currentLabels.contains(key)) {
+                s.add(key);
+            }
+        });
+
+
+        for (var label:s
+             ) {
+            text += label;
+
+        }
+
+        return text + " " + attributeType.toString();
     }
 
     public List<String> getAllLabels() {
@@ -76,6 +105,34 @@ public class LinguisticVariable {
     public FuzzySet getFuzzySet(Integer index) {
 
         return getAllFuzzySets().get(index);
+    }
+
+    public Space getSpace() {
+
+        return getFuzzySet(0).getSpace();
+    }
+
+    public void setClassicSet(ClassicSet set) {
+
+        this.labels.forEach((key, value) -> value.setClassicSet(set));
+    }
+
+    public List<String> getLabelsWithIndexes(List<Integer> indexes) {
+
+        List<String> labels = new ArrayList<>();
+
+        AtomicReference<Integer> i = new AtomicReference<>(0);
+        this.labels.forEach((key, value) -> {
+            if (indexes.contains(i.get()))
+                labels.add(key);
+
+            i.getAndSet(i.get() + 1);
+        });
+        return labels;
+    }
+
+    public void clearCurrentLabels() {
+        currentLabels.clear();
     }
 
 }

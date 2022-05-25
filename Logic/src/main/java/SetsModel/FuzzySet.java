@@ -1,6 +1,7 @@
 package SetsModel;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -10,49 +11,90 @@ import java.util.List;
 public class FuzzySet implements SetsOperations<FuzzySet> {
 
     @Getter private ClassicSet classicSet;
-    @Getter private Function function;
+    @Getter private MembershipFunction function;
     @Getter private List<Double> membershipValuesList;
     @Getter private boolean isComplement;
+    @Getter @Setter private FuzzyOperationsType operationType;
+    @Getter @Setter private FuzzySet set;
 
-    public FuzzySet(ClassicSet classicSet, Function function, boolean isComplement) {
+    public FuzzySet(ClassicSet classicSet, MembershipFunction function, boolean isComplement) {
         this.classicSet = classicSet;
         this.function = function;
         this.isComplement = isComplement;
+        operationType = FuzzyOperationsType.None;
 
         membershipValuesList = getMembershipValues();
     }
 
-    public FuzzySet(Function function) {
+    public FuzzySet(ClassicSet classicSet, MembershipFunction function, boolean isComplement, FuzzyOperationsType operationType, FuzzySet set) {
+        this.classicSet = classicSet;
+        this.function = function;
+        this.isComplement = isComplement;
+        this.operationType = operationType;
+        this.set = set;
+
+        membershipValuesList = getMembershipValues();
+    }
+
+    public FuzzySet(MembershipFunction function) {
         this.function = function;
         isComplement = false;
     }
 
-    public FuzzySet(Function function, boolean isComplement) {
+    public FuzzySet(MembershipFunction function, boolean isComplement) {
         this.function = function;
         this.isComplement = isComplement;
+        operationType = FuzzyOperationsType.None;
     }
 
     @Override
     public FuzzySet sum(FuzzySet s2) {
 
-
-        Function f = new Function(FuzzyOperationsType.Sum, function.getMembershipFunction(),
-                s2.getFunction());
-
         boolean c = isComplement || s2.isComplement();
 
-        return new FuzzySet(classicSet, f, c);
+        if (operationType == FuzzyOperationsType.None) {
+
+            return new FuzzySet(classicSet, function, c, FuzzyOperationsType.Sum, s2);
+        }
+        else {
+
+            FuzzySet lastSet = set;
+
+            while (lastSet.getSet() != null) {
+
+                lastSet = lastSet.getSet();
+            }
+
+            lastSet.setSet(s2);
+            lastSet.setOperationType(FuzzyOperationsType.Sum);
+
+            return new FuzzySet(classicSet, function, isComplement, operationType, set);
+        }
     }
 
     @Override
     public FuzzySet product(FuzzySet s2) {
 
-        Function f = new Function(FuzzyOperationsType.Product, function.getMembershipFunction(),
-                s2.getFunction());
-
         boolean c = isComplement || s2.isComplement();
 
-        return new FuzzySet(classicSet, f, c);
+        if (operationType == FuzzyOperationsType.None) {
+
+            return new FuzzySet(classicSet, function, c, FuzzyOperationsType.Product, s2);
+        }
+        else {
+
+            FuzzySet lastSet = set;
+
+            while (lastSet.getSet() != null) {
+
+                lastSet = lastSet.getSet();
+            }
+
+            lastSet.setSet(s2);
+            lastSet.setOperationType(FuzzyOperationsType.Product);
+
+            return this;
+        }
     }
 
     private List<Double> getMembershipValues() {
@@ -66,9 +108,9 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
              ) {
 
             if (!isComplement)
-                values.add(function.calculateMembership(element));
+                values.add(calculateMembership(element));
             else
-                values.add(1 - function.calculateMembership(element));
+                values.add(1 - calculateMembership(element));
         }
 
         return values;
@@ -184,6 +226,46 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
                 return false;
         }
         return true;
+    }
+
+    public Double calculateMembership(Double x) {
+
+        if (operationType.equals(FuzzyOperationsType.None)) {
+
+            return function.calculateMembership(x);
+        }
+        else {
+
+            switch (operationType){
+
+                case Sum -> {
+
+                    List<Double> options = new ArrayList<>();
+
+                    options.add(function.calculateMembership(x));
+                    options.add(set.calculateMembership(x));
+
+                    return options.stream().max(Double::compareTo).orElse(0.0);
+
+                }
+                case Product -> {
+
+                    List<Double> options = new ArrayList<>();
+
+                    options.add(function.calculateMembership(x));
+                    options.add(set.calculateMembership(x));
+
+                    return options.stream().min(Double::compareTo).orElse(0.0);
+
+                }
+            }
+        }
+
+        return 0.0;
+    }
+
+    public Space getSpace() {
+        return classicSet.getSpace();
     }
 
     public boolean isNormal () {

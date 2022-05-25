@@ -6,16 +6,24 @@ import Managers.QuantifiersLoadingManager;
 import Repos.HousesRepo;
 import Repos.LinguisticQuantifierRepo;
 import Repos.LinguisticVariableRepo;
+import Repos.SummaryRepo;
 import SetsModel.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.apache.commons.math3.util.CombinatoricsUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static SetsModel.FuzzyOperationsType.Product;
 
 public class Application extends javafx.application.Application {
 
@@ -24,6 +32,10 @@ public class Application extends javafx.application.Application {
     private HousesRepo housesRepo;
     private LinguisticQuantifierRepo linguisticQuantifierRepo;
     private LinguisticVariableRepo linguisticVariableRepo;
+
+    private SummaryRepo summaryRepo;
+
+    private Double truthBorder;
 
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException, SQLException {
@@ -52,72 +64,152 @@ public class Application extends javafx.application.Application {
         QuantifiersLoadingManager.loadLinguisticQuantifiers(linguisticQuantifierRepo);
         LinguisticVariablesLoadingManager.loadLinguisticQuantifiers(linguisticVariableRepo);
 
+        summaryRepo = new SummaryRepo();
+
         Controller.instance.setObjects(housesRepo, linguisticVariableRepo, linguisticQuantifierRepo);
     }
 
-    public void generateSummary(SummaryTypes summaryType, Integer multiType, Integer qualifierIndex, String qualifierLabel,
-                                Integer summarizerIndex, List<String> summarizersLabels, Connector connector) {
+
+    public void generateAllSummaries(SummaryTypes summaryType, Integer multiType, Integer qualifierIndex, List<Integer> summarizersIndexes, Double truthBorder) {
+
+        summaryRepo.clearAll();
 
         SummaryBuilder summaryBuilder = SummaryBuilder.aSummary();
 
-        ClassicSet P1, P2, W = null;
+        summaryBuilder.withConnector(Connector.and).withSummaryType(summaryType).withMultiForm(multiType)
+                .withQuantifier(linguisticQuantifierRepo.getAll());
 
-        if (summaryType.equals(SummaryTypes.single)) {
+        LinguisticVariable qualifier = null;
 
-            LinguisticVariable qualifier = null;
+        if (qualifierIndex != -1) {
+            qualifier = linguisticVariableRepo.getVariable(qualifierIndex);
 
-            if (qualifierIndex == -1) {
-                P1 = null;
-            }
-            else {
-
-                qualifier = linguisticVariableRepo.getVariable(qualifierIndex);
-                qualifier.setCurrentLabel(qualifierLabel);
-
-                P1 = new ClassicSet(housesRepo.getValuesOfAttribute(qualifier.getAttributeType()),
-                        qualifier.getFuzzySet(0).getClassicSet().getSpace(), false);
-
-            }
-
-            LinguisticVariable summarizer = linguisticVariableRepo.getVariable(summarizerIndex);
-
-            List<LinguisticVariable> summarizers = new ArrayList<>();
-
-            P2 = new ClassicSet(housesRepo.getValuesOfAttribute(summarizer.getAttributeType()),
-                    summarizer.getFuzzySet(0).getClassicSet().getSpace(), false);
-
-            for (var label:summarizersLabels
-                 ) {
-
-                LinguisticVariable linguisticVariable = new LinguisticVariable(summarizer.getAttributeType(),
-                        summarizer.getLabels(), label);
-
-                summarizers.add(linguisticVariable);
-            }
-
-
-
-            Summary summary = summaryBuilder.withSummaryType(summaryType).withMultiForm(multiType).
-                    withClassicSetP1(P1).withClassicSetP2(P2).withClassicSetW(W).withQualifier(qualifier).
-                    withSummarizers(summarizers).withQuantifier(linguisticQuantifierRepo.getAll()).
-                    withConnector(connector).build();
-
-            List<String> multiLine = summary.getStringSummariesWithAverageT();
-
-            String text = "";
-
-            for (var line:multiLine
-                 ) {
-
-                text += line + "\n";
-            }
-
-            Controller.instance.showSummary(text);
         }
+
+        switch(summaryType) {
+
+            case single -> {
+
+                List<ClassicSet> classicSetsSummarizers = getSummarizersClassicSets(summarizersIndexes);
+
+                List<LinguisticVariable> variables = getSummarizersLinguisticVariables(summarizersIndexes);
+
+                for(int i = 0; i < summarizersIndexes.size(); i++) {
+
+                    if (i < variables.size()) {
+                        variables.get(i).setClassicSet(classicSetsSummarizers.get(i));
+                    }
+                }
+
+                Integer s1 = variables.get(0).getLabels().size();
+                Integer s2 = 0;
+
+                if (variables.size() > 1)
+                    s2 = variables.get(1).getLabels().size();
+
+                switch(multiType){
+
+                    case 1 -> {
+
+                        for (int i = 0; i < s1; i++) {
+
+                            variables.get(0).clearCurrentLabels();
+                            variables.get(0).addCurrentLabel(i);
+
+                            for (int j = 0; j < s2; j++) {
+
+                                variables.get(1).clearCurrentLabels();
+                                variables.get(1).addCurrentLabel(j);
+
+
+                                SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll()).build();
+
+                                summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                            }
+
+                            SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(linguisticQuantifierRepo.getAll()).build();
+
+                            summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+
+                        }
+                    }
+                    case 2 -> {
+
+                        qualifier.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier.getAttributeType()),
+                                qualifier.getSpace(), false));
+
+                        for (int i = 0; i < s1; i++) {
+
+                            variables.get(0).clearCurrentLabels();
+                            variables.get(0).addCurrentLabel(i);
+
+                            for (int j = 0; j < s2; j++) {
+
+
+                                Integer k;
+                                for (k = 0; k < qualifier.getAllLabels().size(); k++) {
+
+                                    qualifier.clearCurrentLabels();
+                                    qualifier.addCurrentLabel(k);
+
+                                    variables.get(1).clearCurrentLabels();
+                                    variables.get(1).addCurrentLabel(j);
+
+
+                                    SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll()).
+                                            withQualifier(qualifier).build();
+
+                                    summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Controller.instance.showSummary(summaryRepo.getAllToString());
 
     }
 
     public static void main(String[] args) {
         launch();
     }
+
+
+
+    private List<LinguisticVariable> getSummarizersLinguisticVariables(List<Integer> summarizersIndexes) {
+
+        List<LinguisticVariable> variables = new ArrayList<>();
+
+        for (var i:summarizersIndexes
+        ) {
+
+            if (i != -1) {
+                variables.add(linguisticVariableRepo.getVariable(i));
+            }
+        }
+
+        return variables;
+    }
+
+    private List<ClassicSet> getSummarizersClassicSets(List<Integer> summarizersIndexes) {
+
+        List<ClassicSet> sets = new ArrayList<>();
+
+        for (var i:summarizersIndexes
+             ) {
+
+            if (i != -1) {
+                LinguisticVariable linguisticVariable = linguisticVariableRepo.getVariable(i);
+
+                sets.add(new ClassicSet(housesRepo.getValuesOfAttribute(linguisticVariable.getAttributeType()),
+                        linguisticVariable.getSpace(), false));
+            }
+        }
+
+        return sets;
+    }
 }
+

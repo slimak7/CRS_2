@@ -23,11 +23,13 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
     public ClassicSet(Space space) {
         this.space = space;
         complement = false;
+        elements = new ArrayList<>();
     }
 
     public ClassicSet(Space space, boolean complement) {
         this.space = space;
         this.complement = complement;
+        elements = new ArrayList<>();
     }
 
     @Override

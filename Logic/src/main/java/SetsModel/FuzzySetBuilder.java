@@ -2,7 +2,9 @@ package SetsModel;
 
 public final class FuzzySetBuilder {
     private ClassicSet classicSet;
-    private Function function;
+    private FuzzyOperationsType operationType;
+    private FuzzySet set;
+    private MembershipFunction function;
     private boolean isComplement;
 
     private FuzzySetBuilder() {
@@ -17,7 +19,17 @@ public final class FuzzySetBuilder {
         return this;
     }
 
-    public FuzzySetBuilder withFunction(Function function) {
+    public FuzzySetBuilder withOperationType(FuzzyOperationsType operationType) {
+        this.operationType = operationType;
+        return this;
+    }
+
+    public FuzzySetBuilder withSet(FuzzySet set) {
+        this.set = set;
+        return this;
+    }
+
+    public FuzzySetBuilder withFunction(MembershipFunction function) {
         this.function = function;
         return this;
     }
@@ -28,6 +40,10 @@ public final class FuzzySetBuilder {
     }
 
     public FuzzySet build() {
-        return new FuzzySet(classicSet, function, isComplement);
+        FuzzySet fuzzySet = new FuzzySet(function, isComplement);
+        fuzzySet.setClassicSet(classicSet);
+        fuzzySet.setOperationType(operationType);
+        fuzzySet.setSet(set);
+        return fuzzySet;
     }
 }

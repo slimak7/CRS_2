@@ -69,7 +69,7 @@ public class LinguisticVariablesLoadingManager {
 
                     linguisticVariable.addLabel(labelName, fuzzySetBuilder.
                             withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).
-                            withFunction(new Function(FuzzyOperationsType.None, new GaussianFunction(m, s, l, r), null)).build());
+                            withFunction(new GaussianFunction(m, s, l, r)).withOperationType(FuzzyOperationsType.None).build());
                 }
                 if (type.equals("trapezoidal")) {
 
@@ -80,7 +80,7 @@ public class LinguisticVariablesLoadingManager {
 
                     linguisticVariable.addLabel(labelName, fuzzySetBuilder.
                             withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).
-                            withFunction(new Function(FuzzyOperationsType.None, new TrapezoidalFunction(a, b, c, d), null)).build());
+                            withFunction(new TrapezoidalFunction(a, b, c, d)).withOperationType(FuzzyOperationsType.None).build());
                 }
                 if (type.equals("triangular")) {
 
@@ -91,7 +91,7 @@ public class LinguisticVariablesLoadingManager {
 
                     linguisticVariable.addLabel(labelName, fuzzySetBuilder.
                             withClassicSet(classicSetBuilder.withSpace(new Space(spaceType, range)).build()).
-                            withFunction(new Function(FuzzyOperationsType.None, new TriangularFunction(a, b, c), null)).build());
+                            withFunction(new TriangularFunction(a, b, c)).withOperationType(FuzzyOperationsType.None).build());
                 }
             }
 

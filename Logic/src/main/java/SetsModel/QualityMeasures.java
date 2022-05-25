@@ -7,20 +7,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+
 public class QualityMeasures {
 
-    @Getter private List<LinguisticVariable> summarizers;
+    @Getter private List<FuzzySet> summarizers;
     @Getter private Connector connector;
     @Getter private List<LinguisticQuantifier> quantifiers;
-    @Getter private LinguisticVariable qualifier;
-    @Getter private ClassicSet classicSetP1;
-    @Getter private ClassicSet classicSetP2;
-    @Getter private ClassicSet classicSetW;
+    @Getter private LinguisticVariable qualifiers;
     @Getter private Integer multiForm;
     @Getter private SummaryTypes summaryType;
 
+    private Integer elementsCount;
+
+    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, LinguisticVariable qualifiers, Integer multiForm, SummaryTypes summaryType) {
+        this.summarizers = summarizers;
+        this.connector = connector;
+        this.quantifiers = quantifiers;
+        this.qualifiers = qualifiers;
+        this.multiForm = multiForm;
+        this.summaryType = summaryType;
+
+        if (qualifierList != null)
+            this.qualifier = qualifierList.get(0);
+
+        elementsCount = summarizers.get(0).getClassicSet().getElements().size();
+    }
+
+    private FuzzySet qualifier;
+
     public List<Double> getT_1() {
+
+
 
         List<Double> measures = new ArrayList<>();
 
@@ -32,8 +49,8 @@ public class QualityMeasures {
         if (summaryType.equals(SummaryTypes.single)) {
 
 
-            FuzzySet sumSet = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-            sumSet.setClassicSet(classicSetP2);
+            FuzzySet sumSet = connection(summarizers);
+
 
             if (multiForm.equals(1)) {
 
@@ -43,25 +60,22 @@ public class QualityMeasures {
                     r += v;
                 }
 
-                m = Double.valueOf(classicSetP2.getElements().size());
+                m = Double.valueOf(elementsCount);
             }
 
             if (multiForm.equals(2)) {
 
-                qualifier.getCurrentFuzzySet().setClassicSet(classicSetP1);
-
-                FuzzySet qSet = qualifier.getCurrentFuzzySet();
-                for (int i = 0; i < qSet.getMembershipValuesList().size(); i++) {
+                for (int i = 0; i < qualifier.getMembershipValuesList().size(); i++) {
 
 
-                    if (qSet.getMembershipValuesList().get(i) > 0.0) {
+                    if (qualifier.getMembershipValuesList().get(i) > 0.0) {
 
-                        r2 += qSet.getMembershipValuesList().get(i);
+                        r2 += qualifier.getMembershipValuesList().get(i);
                         r += sumSet.getMembershipValuesList().get(i);
                     }
                 }
 
-                m2 = Double.valueOf(classicSetP1.getElements().size());
+                m2 = Double.valueOf(elementsCount);
             }
 
 
@@ -71,89 +85,88 @@ public class QualityMeasures {
             if (multiForm.equals(1)) {
 
 
-
-                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet1.setClassicSet(classicSetP1);
+                FuzzySet sumSet1 = connection(summarizers);
 
                 r = sumSet1.getCardinalValue();
 
-                m = Double.valueOf(classicSetP1.getElements().size());
+                m = Double.valueOf(elementsCount);
 
+                FuzzySet sumSet2 = connection(summarizers);
 
-                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet2.setClassicSet(classicSetP2);
 
                 r2 = sumSet2.getCardinalValue();
 
-                m2 = Double.valueOf(classicSetP2.getElements().size());
+                m2 = Double.valueOf(elementsCount);
 
             }
             if (multiForm.equals(2)) {
 
 
-                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet1.setClassicSet(classicSetP1);
+
+                FuzzySet sumSet1 = connection(summarizers);
+
 
                 r = sumSet1.getCardinalValue();
 
-                m = Double.valueOf(classicSetP1.getElements().size());
+                m = Double.valueOf(elementsCount);
 
-                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet2.setClassicSet(classicSetP2);
 
-                qualifier.getCurrentFuzzySet().setClassicSet(classicSetW);
+                FuzzySet sumSet2 = connection(summarizers);
 
-                for(int i = 0; i < sumSet2.getMembershipValuesList().size(); i++) {
 
-                    r2 += Math.min(sumSet2.getMembershipValuesList().get(i),
-                            qualifier.getCurrentFuzzySet().getMembershipValuesList().get(i));
+                FuzzySet sq = sumSet2.product(qualifier);
+
+                for(int i = 0; i < sq.getMembershipValuesList().size(); i++) {
+
+                    r2 += sq.getMembershipValuesList().get(i);
                 }
 
-                m2 = Double.valueOf(classicSetP2.getElements().size());
+                m2 = Double.valueOf(elementsCount);
             }
             if (multiForm.equals(3)) {
 
 
-                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet1.setClassicSet(classicSetP1);
 
-                qualifier.getCurrentFuzzySet().setClassicSet(classicSetW);
+                FuzzySet sumSet1 = connection(summarizers);
 
-                for(int i = 0; i < sumSet1.getMembershipValuesList().size(); i++) {
 
-                    r += Math.min(sumSet1.getMembershipValuesList().get(i),
-                            qualifier.getCurrentFuzzySet().getMembershipValuesList().get(i));
+                FuzzySet sq = qualifier.product(sumSet1);
+
+                for(int i = 0; i < sq.getMembershipValuesList().size(); i++) {
+
+                    r += sq.getMembershipValuesList().get(i);
                 }
 
-                m = Double.valueOf(classicSetP1.getElements().size());
+                m = Double.valueOf(elementsCount);
 
 
+                FuzzySet sumSet2 = connection(summarizers);
 
-                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet2.setClassicSet(classicSetP2);
 
                 r2 = sumSet2.getCardinalValue();
 
-                m2 = Double.valueOf(classicSetP2.getElements().size());
+                m2 = Double.valueOf(elementsCount);
 
             }
             if (multiForm.equals(4)) {
 
 
 
-                FuzzySet sumSet1 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet1.setClassicSet(classicSetP1);
+
+                FuzzySet sumSet1 = connection(summarizers);
+
 
                 r = sumSet1.getCardinalValue();
-                m = Double.valueOf(classicSetP1.getElements().size());
+                m = Double.valueOf(elementsCount);
 
 
 
-                FuzzySet sumSet2 = connection(summarizers.stream().map(x -> x.getCurrentFuzzySet()).collect(Collectors.toList()));
-                sumSet2.setClassicSet(classicSetP2);
+
+                FuzzySet sumSet2 = connection(summarizers);
+
 
                 r2 = sumSet1.getCardinalValue();
-                m2 = Double.valueOf(classicSetP2.getElements().size());
+                m2 = Double.valueOf(elementsCount);
             }
         }
 
@@ -230,8 +243,7 @@ public class QualityMeasures {
 
         for (var sum:summarizers
         ) {
-            sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-            product *= sum.getCurrentFuzzySet().getDegreeOfFuzziness();
+            product *= sum.getDegreeOfFuzziness();
         }
 
         return 1 - Math.pow(product, 1.0 / summarizers.size());
@@ -240,28 +252,20 @@ public class QualityMeasures {
 
     public Double getT_3 () {
 
+        if (qualifier == null)
+            return 0.0;
+
         Double qualifierMembership = 1.0;
         Integer t = 0;
         Integer h = 0;
 
-        if (qualifier != null) {
 
-            qualifier.getCurrentFuzzySet().setClassicSet(classicSetP1);
-        }
+        FuzzySet set = connection(summarizers);
 
-        for (var sum:summarizers
-        ) {
-
-            sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-
-        }
-
-        FuzzySet set = connection(summarizers.stream().map(LinguisticVariable::getCurrentFuzzySet).collect(Collectors.toList()));
-
-        for (int i = 0; i < classicSetP1.getElements().size(); i++) {
+        for (int i = 0; i < qualifier.getClassicSet().getElements().size(); i++) {
 
             if (qualifier != null) {
-                qualifierMembership = qualifier.getCurrentFuzzySet().getMembershipValuesList().get(i);
+                qualifierMembership = qualifier.getMembershipValuesList().get(i);
             }
 
             if (qualifierMembership > 0) {
@@ -283,19 +287,16 @@ public class QualityMeasures {
         Double product = 1.0;
         Double T3 = getT_3();
 
-        for (var sum:summarizers
-        ) {
-            sum.getCurrentFuzzySet().setClassicSet(classicSetP1);
-        }
+
 
         for (var sum : summarizers) {
             int r = 0;
-            for (var v:sum.getCurrentFuzzySet().getMembershipValuesList()) {
+            for (var v:sum.getMembershipValuesList()) {
                 if (v > 0) {
                     r++;
                 }
             }
-            product *= (double) r / classicSetP1.getElements().size();
+            product *= (double) r / elementsCount;
         }
 
         return Math.abs(product - T3);
@@ -313,11 +314,11 @@ public class QualityMeasures {
         for (var q:quantifiers
              ) {
 
-            Double supp = q.getSet().getFunction().getMembershipFunction().getSupportRange();
+            Double supp = q.getSet().getFunction().getSupportRange();
 
             if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.absolute)) {
 
-                supp /= classicSetP1.getElements().size();
+                supp /= elementsCount;
             }
 
             values.add(supp);
@@ -332,11 +333,11 @@ public class QualityMeasures {
         for (var q:quantifiers
         ) {
 
-            Double card = q.getSet().getFunction().getMembershipFunction().getCardinalityRange();
+            Double card = q.getSet().getFunction().getCardinalityRange();
 
             if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.absolute)) {
 
-                card /= classicSetP1.getElements().size();
+                card /= elementsCount;
             }
 
             values.add(1.0 - card);
@@ -349,7 +350,7 @@ public class QualityMeasures {
         double product = 1.0;
 
         for (var sum : summarizers) {
-            product *= sum.getCurrentFuzzySet().getFunction().getMembershipFunction().getCardinalityRange() / classicSetP1.getElements().size();
+            product *= sum.getFunction().getCardinalityRange() / elementsCount;
         }
 
         return 1 - Math.pow(product, (double) 1 / summarizers.size());
@@ -359,9 +360,8 @@ public class QualityMeasures {
 
         if (qualifier == null) return 0.0;
 
-        qualifier.getCurrentFuzzySet().setClassicSet(classicSetP1);
 
-        return 1 - qualifier.getCurrentFuzzySet().getDegreeOfFuzziness();
+        return 1 - qualifier.getDegreeOfFuzziness();
     }
 
     public Double getT_10 () {
@@ -369,10 +369,10 @@ public class QualityMeasures {
         if (qualifier == null) return 0.0;
 
         Double product = 1.0;
-        List<FuzzySet> sets = qualifier.getAllFuzzySets();
+        List<FuzzySet> sets = qualifiers.getAllFuzzySets();
 
         for (var variable : sets) {
-            product *= variable.getFunction().getMembershipFunction().getCardinalityRange() / classicSetP1.getElements().size();
+            product *= variable.getFunction().getCardinalityRange() / elementsCount;
         }
         return 1 - Math.pow(product, (double) 1 / sets.size());
     }
@@ -381,7 +381,7 @@ public class QualityMeasures {
 
         if (qualifier == null) return 0.0;
 
-        return 2 * Math.pow(0.5, qualifier.getAllFuzzySets().size());
+        return 2 * Math.pow(0.5, qualifiers.getAllFuzzySets().size());
     }
 
 }
