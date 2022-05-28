@@ -1,16 +1,16 @@
 package SetsModel;
 
-import javafx.util.Pair;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class SummaryMaker {
 
-    @Getter private LinguisticVariable qualifier;
+    @Getter private List<LinguisticVariable> qualifiers;
     @Getter private List<LinguisticQuantifier> quantifier;
     @Getter private List<LinguisticVariable> summarizers;
     @Getter private Integer multiForm;
@@ -18,9 +18,10 @@ public class SummaryMaker {
     @Getter private QualityMeasures qualityMeasures;
     @Getter private Connector connector;
 
+    private Double T_2, T_3, T_4, T_5, T_8, T_9, T_10, T_11;
 
-    public SummaryMaker(LinguisticVariable qualifier, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector) {
-        this.qualifier = qualifier;
+    public SummaryMaker(List<LinguisticVariable> qualifiers, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector) {
+        this.qualifiers = qualifiers;
         this.quantifier = quantifier;
         this.summarizers = summarizers;
         this.multiForm = multiForm;
@@ -36,18 +37,24 @@ public class SummaryMaker {
             summarizersSets.addAll(sum.getCurrentFuzzySet());
         }
 
+        List<FuzzySet> qualifiersSets = new ArrayList<>();
+
+        if (qualifiers != null)
+            for (var qualifier:qualifiers) {
+
+                qualifiersSets.addAll(qualifier.getCurrentFuzzySet());
+            }
+
         this.qualityMeasures = new QualityMeasures(summarizersSets,
-                connector, quantifier, qualifier == null ? null : qualifier.getCurrentFuzzySet(), qualifier, multiForm, summaryType);
+                connector, quantifier, qualifiers == null ? null : qualifiersSets, qualifiers, multiForm, summaryType);
     }
 
 
-    public List<Summary> getStringSummariesWithAverageT() {
+    public List<Summary> getStringSummariesWithAverageT(List<Double> weights) {
 
         List<Double> T_1 = qualityMeasures.getT_1();
         List<Double> T_6 = qualityMeasures.getT_6();
         List<Double> T_7 = qualityMeasures.getT_7();
-
-        Double T_2, T_3, T_4, T_5, T_8, T_9, T_10, T_11;
 
         T_2 = qualityMeasures.getT_2();
         T_3 = qualityMeasures.getT_3();
@@ -84,11 +91,23 @@ public class SummaryMaker {
 
                 } else {
 
-                    text += " domów, które są/mają " + qualifier.getString() + " jest/ma ";
+                    text += " domów, które są/mają ";
 
-                    text += summarizers.get(0).getString();
+                    int j = 0;
+                    for (var q:qualifiers
+                         ) {
 
-                    for (int j = 1; j < summarizers.size(); j++) {
+                        text += q.getString();
+
+                        if (j < qualifiers.size()-1)
+                            text += " i ";
+
+                        j++;
+                    }
+
+                    text += " są/mają " + summarizers.get(0).getString();
+
+                    for (j = 1; j < summarizers.size(); j++) {
 
                         text += " " + connector.toString() + " " + summarizers.get(j).getString();
                     }
@@ -102,7 +121,8 @@ public class SummaryMaker {
             }
 
 
-            summaries.add(new Summary(text, Arrays.asList(T_1.get(i), T_2, T_3, T_4, T_5, T_6.get(i), T_7.get(i), T_8, T_9, T_10, T_11)));
+            summaries.add(new Summary(text, Arrays.asList(T_1.get(i), T_2, T_3, T_4, T_5, T_6.get(i), T_7.get(i), T_8, T_9, T_10, T_11,
+                    getAverageMeasure(T_1.get(i), T_6.get(i), T_7.get(i), weights))));
         }
 
         return summaries;
@@ -110,10 +130,18 @@ public class SummaryMaker {
 
 
 
-    private List<Double> getAverageMeasures() {
+    private Double getAverageMeasure(Double T1, Double T6, Double T7, List<Double> weights) {
 
-        List<Double> measures = new ArrayList<>();
+        Double denominator = 0.0;
 
-        return measures;
+        for(var w:weights) {
+            denominator += w;
+        }
+
+        Double numerator = T1 * weights.get(0) + T_2 * weights.get(1) + T_3 * weights.get(2) + T_4 * weights.get(3) +
+                T_5 * weights.get(4) + T6 * weights.get(5) + T7 * weights.get(6) + T_8 * weights.get(7) +
+                T_9 * weights.get(8) + T_10 * weights.get(9) + T_10 * weights.get(10);
+
+        return numerator/denominator;
     }
 }

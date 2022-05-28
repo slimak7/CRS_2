@@ -1,10 +1,12 @@
 package Repos;
 
 import SetsModel.LinguisticQuantifier;
+import SetsModel.LinguisticQuantifiersTypes;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ToString
 public class LinguisticQuantifierRepo {
@@ -34,5 +36,19 @@ public class LinguisticQuantifierRepo {
         quantifiers.forEach((key, v) -> q.add(v));
 
         return q;
+    }
+
+    public List<LinguisticQuantifier> getSelected(LinguisticQuantifiersTypes type) {
+
+        List<LinguisticQuantifier> selected = new ArrayList<>();
+
+        quantifiers.forEach((x, y) -> {
+            if (y.getQuantifierType() == type) {
+                selected.add(y);
+            }
+
+        });
+
+        return selected;
     }
 }

@@ -19,16 +19,8 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
    <BorderPane prefHeight="905.0" prefWidth="1271.0" style="-fx-background-color: #a5ffd6;">
-      <top>
-      
-          <Label id="Title" fx:id="welcomeText" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="253.0" style="-fx-background-color: #eb4c34; -fx-border-width: 5; -fx-border-color: #000000; -fx-border-radius: 25; -fx-background-radius: 25;" text="KSR - zadanie 2." BorderPane.alignment="CENTER">
-            <font>
-               <Font name="Calibri Bold" size="24.0" />
-            </font>
-         </Label>
-      </top>
       <center>
-         <TableView fx:id="HousesTable" prefHeight="240.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
+         <TableView fx:id="HousesTable" prefHeight="150.0" prefWidth="1271.0" style="-fx-background-color: #d4ffb8; -fx-border-width: 3px; -fx-border-color: black;" BorderPane.alignment="CENTER" />
       </center>
       <bottom>
          
@@ -36,7 +28,7 @@
       <bottom>
          <BorderPane prefHeight="541.0" prefWidth="1271.0" style="-fx-background-color: #84dcc6;" BorderPane.alignment="CENTER">
             <top>
-               <TilePane alignment="TOP_CENTER" prefHeight="167.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+               <TilePane alignment="TOP_CENTER" prefHeight="40.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
                   <children>
                      <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Typ podsumowania" TilePane.alignment="CENTER">
                        <content>
@@ -50,17 +42,26 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut - kwalifikator" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 1 - kwalifikator" TilePane.alignment="CENTER">
                         <content>
                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                               <children>
-                                 <ComboBox fx:id="comboBoxColumnTypeQualifier" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                                 <ComboBox fx:id="comboBoxColumnTypeQualifier1" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
                               </children>
                            </AnchorPane>
                         </content>
                         <TilePane.margin>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
+                     </TitledPane>
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 2 - kwalifikator">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxColumnTypeQualifier2" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
                      </TitledPane>
                      <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 1 - sumaryzator" TilePane.alignment="CENTER">
                         <content>
@@ -110,33 +111,74 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
+                     <Button mnemonicParsing="false" onAction="#reset" prefHeight="45.0" prefWidth="187.0" text="Resetuj">
+                        <font>
+                           <Font size="19.0" />
+                        </font>
+                     </Button>
+                     <Button mnemonicParsing="false" onAction="#saveSummaries" prefHeight="45.0" prefWidth="187.0" text="Zapisz">
+                        <font>
+                           <Font size="19.0" />
+                        </font>
+                     </Button>
                   </children>
                </TilePane>
             </top>
             <center>
-               <TextArea fx:id="textArea" prefHeight="248.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+               <TextArea fx:id="textArea" prefHeight="217.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
                   <font>
                      <Font size="20.0" />
                   </font></TextArea>
             </center>
             <bottom>
-               <AnchorPane nodeOrientation="LEFT_TO_RIGHT" BorderPane.alignment="CENTER">
+               <AnchorPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="84.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
                   <children>
-                     <TextField fx:id="textFieldTruthValue" layoutX="1202.0" layoutY="8.0" prefHeight="25.0" prefWidth="63.0" />
-                     <Label layoutX="1002.0" layoutY="6.0" text="Stopień prawdziwości">
+                     <TextField fx:id="textFieldTruthValue" layoutX="1199.0" layoutY="21.0" prefHeight="25.0" prefWidth="63.0" text="0.5" />
+                     <Label layoutX="999.0" layoutY="19.0" text="Stopień prawdziwości">
                         <font>
                            <Font size="20.0" />
                         </font>
                      </Label>
-                     <Button layoutX="506.0" layoutY="1.0" mnemonicParsing="false" onAction="#generateAllSummaries" prefHeight="40.0" prefWidth="259.0" text="Generuj podsumowania" textAlignment="CENTER">
+                     <Button layoutX="733.0" layoutY="13.0" mnemonicParsing="false" onAction="#generateAllSummaries" prefHeight="40.0" prefWidth="259.0" text="Generuj podsumowania" textAlignment="CENTER">
                         <font>
                            <Font name="System Bold" size="18.0" />
                         </font>
                      </Button>
+                     <TextField fx:id="textFieldWeights" layoutX="73.0" layoutY="18.0" prefHeight="31.0" prefWidth="361.0" promptText="Wagi dla średniej ważonej z miar od T1 do T11" text="0.3;0.07;0.07;0.07;0.07;0.07;0.07;0.07;0.07;0.07;0.07">
+                        <font>
+                           <Font size="15.0" />
+                        </font>
+                     </TextField>
+                     <Label layoutX="9.0" layoutY="19.0" prefHeight="30.0" prefWidth="55.0" text="Wagi">
+                        <font>
+                           <Font size="20.0" />
+                        </font>
+                     </Label>
+                     <TitledPane alignment="CENTER" animated="false" layoutX="457.0" layoutY="9.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="262.0" style="-fx-background-color: black;" text="Sortuj po...">
+                        <content>
+                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                              <children>
+                                 <ComboBox fx:id="comboBoxSortBy" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="245.0" />
+                              </children>
+                           </AnchorPane>
+                        </content>
+                     </TitledPane>
                   </children>
                </AnchorPane>
             </bottom>
          </BorderPane>
       </bottom>
+      <top>
+         <AnchorPane prefHeight="43.0" prefWidth="1271.0" BorderPane.alignment="CENTER">
+            <children>
+            
+                <Label id="Title" fx:id="welcomeText" alignment="CENTER" layoutX="547.0" layoutY="-8.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="44.0" prefWidth="177.0" style="-fx-background-color: #eb4c34; -fx-border-width: 5; -fx-border-color: #000000; -fx-border-radius: 25; -fx-background-radius: 25;" text="KSR - zadanie 2.">
+                  <font>
+                     <Font name="Calibri Bold" size="24.0" />
+                  </font>
+               </Label>
+            </children>
+         </AnchorPane>
+      </top>
    </BorderPane>
 </VBox>

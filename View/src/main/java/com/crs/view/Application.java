@@ -15,7 +15,7 @@ import javafx.util.Pair;
 import org.apache.commons.math3.util.CombinatoricsUtils;
 import org.paukov.combinatorics3.Generator;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,7 +37,9 @@ public class Application extends javafx.application.Application {
 
     private SummaryRepo summaryRepo;
 
-    private Double truthBorder;
+    private Double truthDegree;
+
+    private List<Double> weights;
 
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException, SQLException {
@@ -56,6 +58,8 @@ public class Application extends javafx.application.Application {
 
         instance = this;
 
+        weights = new ArrayList<>();
+
         housesRepo = new HousesRepo(
                 HouseLoadingManager.LoadHouses()
         );
@@ -72,21 +76,34 @@ public class Application extends javafx.application.Application {
     }
 
 
-    public void generateAllSummaries(SummaryTypes summaryType, Integer multiType, Integer qualifierIndex, List<Integer> summarizersIndexes, Double truthBorder) {
+    public void generateAllSummaries(SummaryTypes summaryType, Integer multiType, List<Integer> qualifierIndexes, List<Integer> summarizersIndexes, Double truthBorder) {
+
+        truthDegree = truthBorder;
+
+        weights = Controller.instance.getWeights();
 
         summaryRepo.clearAll();
 
-        SummaryBuilder summaryBuilder = SummaryBuilder.aSummary();
+        SummaryMakerBuilder summaryBuilder = SummaryMakerBuilder.aSummaryMaker();
 
         summaryBuilder.withConnector(Connector.and).withSummaryType(summaryType).withMultiForm(multiType)
                 .withQuantifier(linguisticQuantifierRepo.getAll());
 
-        LinguisticVariable qualifier = null;
+        LinguisticVariable qualifier1 = null;
+        LinguisticVariable qualifier2 = null;
 
-        if (qualifierIndex != -1) {
-            qualifier = linguisticVariableRepo.getVariable(qualifierIndex);
+        if (qualifierIndexes.get(0) != -1) {
+
+            qualifier1 = linguisticVariableRepo.getVariable(qualifierIndexes.get(0));
 
         }
+        if (qualifierIndexes.get(1) != -1) {
+
+            qualifier2 = linguisticVariableRepo.getVariable(qualifierIndexes.get(1));
+        }
+
+        List<LinguisticQuantifier> quantifiers = (summaryType == SummaryTypes.single && multiType == 1) ?
+                linguisticQuantifierRepo.getAll() : linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative);
 
         switch(summaryType) {
 
@@ -103,76 +120,106 @@ public class Application extends javafx.application.Application {
                     }
                 }
 
-                List<List<Integer>> combinationSum1 = generateAllLabelsCombinations(variables.get(0).getAllLabels().size(), 2);
-                List<List<Integer>> combinationSum2 = new ArrayList<>();
-
-                if (variables.size() > 1)
-                    combinationSum2 = generateAllLabelsCombinations(variables.get(1).getAllLabels().size(), 2);
 
                 switch(multiType){
 
                     case 1 -> {
 
-                        for (int i = 0; i < combinationSum1.size(); i++) {
+                        for (int i = 0; i < variables.get(0).getAllFuzzySets().size(); i++) {
 
                             variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(combinationSum1.get(i));
+                            variables.get(0).addCurrentLabel(i);
 
-                            for (int j = 0; j < combinationSum2.size(); j++) {
+                            if (variables.size() > 1)
+                            for (int j = 0; j < variables.get(1).getAllFuzzySets().size(); j++) {
 
                                 variables.get(1).clearCurrentLabels();
-                                variables.get(1).addCurrentLabel(combinationSum2.get(j));
+                                variables.get(1).addCurrentLabel(j);
 
 
-                                SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll()).build();
+                                SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers).build();
 
-                                summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
                             }
 
                             if (variables.size() == 1) {
-                                SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(linguisticQuantifierRepo.getAll()).build();
+                                SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(quantifiers).build();
 
-                                summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
                             }
 
                         }
                     }
                     case 2 -> {
 
+                        qualifier1.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier1.getAttributeType()),
+                                qualifier1.getSpace(), false));
 
-                        qualifier.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier.getAttributeType()),
-                                qualifier.getSpace(), false));
+                        if (qualifier2 != null) {
+                            qualifier2.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier2.getAttributeType()),
+                                    qualifier2.getSpace(), false));
+                        }
 
-                        List<List<Integer>> combinationQ = generateAllLabelsCombinations(qualifier.getAllLabels().size(), 2);
 
-                        for (int i = 0; i < combinationSum1.size(); i++) {
+
+                        for (int i = 0; i < variables.get(0).getAllFuzzySets().size(); i++) {
 
                             variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(combinationSum1.get(i));
+                            variables.get(0).addCurrentLabel(i);
 
-                            for (int k = 0; k < combinationQ.size(); k++) {
+                            for (int k = 0; k < qualifier1.getAllFuzzySets().size(); k++) {
 
-                                qualifier.clearCurrentLabels();
-                                qualifier.addCurrentLabel(combinationQ.get(k));
+                                qualifier1.clearCurrentLabels();
+                                qualifier1.addCurrentLabel(k);
 
-                                for (int j = 0; j < combinationSum2.size(); j++) {
+                                if (qualifier2 != null)
+                                for (int j = 0; j < qualifier2.getAllFuzzySets().size(); j++) {
 
-                                    variables.get(1).clearCurrentLabels();
-                                    variables.get(1).addCurrentLabel(combinationSum2.get(j));
+                                    qualifier2.clearCurrentLabels();
+                                    qualifier2.addCurrentLabel(j);
+
+                                    if (variables.size() > 1)
+                                    for (int h = 0; h < variables.get(1).getAllFuzzySets().size(); h++) {
+
+                                        variables.get(1).clearCurrentLabels();
+                                        variables.get(1).addCurrentLabel(h);
 
 
-                                    SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(linguisticQuantifierRepo.getAll())
-                                            .withQualifier(qualifier).build();
+                                        SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers)
+                                                .withQualifiers(Arrays.asList(qualifier1, qualifier2)).build();
 
-                                    summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                    }
+
+                                    if (variables.size() == 1) {
+                                        SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
+                                                withQuantifier(quantifiers)
+                                                .withQualifiers(Arrays.asList(qualifier1, qualifier2)).build();
+
+                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                    }
                                 }
 
-                                if (variables.size() == 1) {
-                                    SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
-                                            withQuantifier(linguisticQuantifierRepo.getAll())
-                                            .withQualifier(qualifier).build();
+                                if (variables.size() > 1 && qualifier2 == null) {
+                                    for (int j = 0; j < variables.get(1).getAllFuzzySets().size(); j++) {
 
-                                    summaryRepo.addAll(summary.getStringSummariesWithAverageT());
+                                        variables.get(1).clearCurrentLabels();
+                                        variables.get(1).addCurrentLabel(j);
+
+
+                                        SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers)
+                                                .withQualifiers(Arrays.asList(qualifier1)).build();
+
+                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                    }
+
+                                    if (variables.size() == 1) {
+                                        SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
+                                                withQuantifier(quantifiers)
+                                                .withQualifiers(Arrays.asList(qualifier1)).build();
+
+                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                    }
                                 }
                             }
 
@@ -186,29 +233,26 @@ public class Application extends javafx.application.Application {
             }
         }
 
+        summaryRepo.setDegreeOfTruth(truthBorder);
+        summaryRepo.setMeasureToSort(Controller.instance.getMeasureIndexToSort());
         Controller.instance.showSummary(summaryRepo.getAllToString());
 
+    }
+
+    public void saveSummaries(String path) throws FileNotFoundException, UnsupportedEncodingException {
+
+        String text = summaryRepo.getAllToStringWithMeasures();
+
+        PrintWriter writer = new PrintWriter(path + ".txt", "UTF-8");
+
+        writer.write(text);
+        writer.close();
     }
 
     public static void main(String[] args) {
         launch();
     }
 
-    private List<List<Integer>> generateAllLabelsCombinations(Integer n, Integer r) {
-
-        List<Integer> values = new ArrayList<>();
-
-        for (int i = 0; i < n; i++) {
-
-            values.add(i);
-        }
-
-        List<List<Integer>> combinationR = Generator.combination(values).simple(r).stream().toList();
-
-        List<List<Integer>> combinationOne = Generator.combination(values).simple(1).stream().toList();
-
-        return Stream.concat(combinationR.stream(), combinationOne.stream()).collect(Collectors.toList());
-    }
 
 
     private List<LinguisticVariable> getSummarizersLinguisticVariables(List<Integer> summarizersIndexes) {

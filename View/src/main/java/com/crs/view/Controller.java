@@ -6,12 +6,17 @@ import Repos.HousesRepo;
 import Repos.LinguisticQuantifierRepo;
 import Repos.LinguisticVariableRepo;
 import SetsModel.AttributeType;
-import SetsModel.Connector;
 import SetsModel.SummaryTypes;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +35,10 @@ public class Controller {
     ComboBox comboBoxSummaryType;
 
     @FXML
-    ComboBox comboBoxColumnTypeQualifier;
+    ComboBox comboBoxColumnTypeQualifier1;
+
+    @FXML
+    ComboBox comboBoxColumnTypeQualifier2;
 
     @FXML
     ComboBox comboBoxColumnTypeSummarizer1;
@@ -45,12 +53,17 @@ public class Controller {
     @FXML
     ComboBox comboBoxHouseType2;
 
+    @FXML
+    ComboBox comboBoxSortBy;
 
     @FXML
     TextArea textArea;
 
     @FXML
     TextField textFieldTruthValue;
+
+    @FXML
+    TextField textFieldWeights;
 
     public void initialize(){
 
@@ -59,6 +72,7 @@ public class Controller {
         setSummaryTypeOptions();
         setColumnsTypesQualifier();
         setColumnsTypesSummarizer();
+        setSortBy();
         setComboBoxDisabled(comboBoxHouseType1, true);
         setComboBoxDisabled(comboBoxHouseType2, true);
         setHousesTypes();
@@ -133,6 +147,8 @@ public class Controller {
 
     private void setSummaryTypeOptions() {
 
+        comboBoxSummaryType.getItems().clear();
+
         comboBoxSummaryType.setPromptText("Wybierz typ podsumowania");
 
         comboBoxSummaryType.getItems().setAll("Podsumowanie jednopodmiotowe typu I",
@@ -142,22 +158,48 @@ public class Controller {
                 "Podsumowanie wielopodmiotowe typu III",
                 "Podsumowanie wielopodmiotowe typu IV");
 
+        comboBoxSummaryType.getSelectionModel().clearSelection();
+
+    }
+
+    private void setSortBy() {
+
+        comboBoxSortBy.getItems().clear();
+
+        List<String> options = Arrays.asList("T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "Średnia ważona - domyślnie");
+
+        for (var v: options
+        ) {
+
+            comboBoxSortBy.getItems().add(v);
+
+        }
+
+        comboBoxSortBy.getSelectionModel().select(11);
     }
 
     private void setColumnsTypesQualifier () {
 
-        comboBoxColumnTypeQualifier.setPromptText("Wybierz atrybut");
+        comboBoxColumnTypeQualifier1.getItems().clear();
+        comboBoxColumnTypeQualifier2.getItems().clear();
+        comboBoxColumnTypeQualifier1.setPromptText("Wybierz atrybut");
+        comboBoxColumnTypeQualifier2.setPromptText("Wybierz atrybut");
 
         for (var v: AttributeType.values()
              ) {
 
-            comboBoxColumnTypeQualifier.getItems().add(v.toString());
+            comboBoxColumnTypeQualifier1.getItems().add(v.toString());
+            comboBoxColumnTypeQualifier2.getItems().add(v.toString());
         }
 
+        comboBoxColumnTypeQualifier1.getSelectionModel().clearSelection();
+        comboBoxColumnTypeQualifier2.getSelectionModel().clearSelection();
     }
 
     private void setColumnsTypesSummarizer () {
 
+        comboBoxColumnTypeSummarizer1.getItems().clear();
+        comboBoxColumnTypeSummarizer2.getItems().clear();
         comboBoxColumnTypeSummarizer1.setPromptText("Wybierz atrybut");
         comboBoxColumnTypeSummarizer2.setPromptText("Wybierz atrybut");
 
@@ -168,12 +210,16 @@ public class Controller {
             comboBoxColumnTypeSummarizer2.getItems().add(v.toString());
         }
 
+        comboBoxColumnTypeSummarizer1.getSelectionModel().clearSelection();
+        comboBoxColumnTypeSummarizer2.getSelectionModel().clearSelection();
     }
 
     private void setHousesTypes() {
 
         setComboBoxElements(comboBoxHouseType1, Arrays.asList("CONDO", "SINGLE_FAMILY", "TOWNHOUSE"), "Wybierz typ domu");
         setComboBoxElements(comboBoxHouseType2, Arrays.asList("CONDO", "SINGLE_FAMILY", "TOWNHOUSE"), "Wybierz typ domu");
+
+
     }
 
     public void setComboBoxDisabled(ComboBox comboBox, boolean disabled) {
@@ -211,7 +257,7 @@ public class Controller {
     @FXML
     public void comboBoxSummaryTypeChanged() {
 
-        if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() > 2){
+        if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() >= 2){
             setComboBoxDisabled(comboBoxHouseType1, false);
             setComboBoxDisabled(comboBoxHouseType2, false);
         }
@@ -244,14 +290,69 @@ public class Controller {
 
         Integer summarizer1Index = comboBoxColumnTypeSummarizer1.getSelectionModel().getSelectedIndex();
         Integer summarizer2Index = comboBoxColumnTypeSummarizer2.getSelectionModel().getSelectedIndex();
-        Integer qualifierIndex = comboBoxColumnTypeQualifier.getSelectionModel().getSelectedIndex();
+        Integer qualifierIndex1 = comboBoxColumnTypeQualifier1.getSelectionModel().getSelectedIndex();
+        Integer qualifierIndex2 = comboBoxColumnTypeQualifier2.getSelectionModel().getSelectedIndex();
 
-        if (summarizer1Index == -1 && summarizer2Index == -1 ) {
+        if (summarizer1Index == -1 && summarizer2Index == -1) {
             showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano chociaż jednego atrybutu sumaryzatora");
             return;
         }
 
-        Application.instance.generateAllSummaries(summaryType, multiForm, qualifierIndex, Arrays.asList(summarizer1Index, summarizer2Index), truthBorder);
+        Application.instance.generateAllSummaries(summaryType, multiForm, Arrays.asList(qualifierIndex1, qualifierIndex2), Arrays.asList(summarizer1Index, summarizer2Index), truthBorder);
+    }
+
+    public List<Double> getWeights() {
+
+        String text = textFieldWeights.getText();
+
+        List<String> weightsString = Arrays.stream(text.split(";")).toList();
+
+        List<Double> weights = new ArrayList<>();
+
+        for(var d:weightsString) {
+
+            weights.add(Double.valueOf(d));
+        }
+
+        return weights;
+    }
+
+    public Integer getMeasureIndexToSort() {
+
+        return comboBoxSortBy.getSelectionModel().getSelectedIndex();
+    }
+
+    @FXML
+    public void reset() {
+
+        setSummaryTypeOptions();
+        setColumnsTypesQualifier();
+        setColumnsTypesSummarizer();
+        setSortBy();
+        setComboBoxDisabled(comboBoxHouseType1, true);
+        setComboBoxDisabled(comboBoxHouseType2, true);
+        setHousesTypes();
+    }
+
+    @FXML
+    public void saveSummaries() throws FileNotFoundException, UnsupportedEncodingException {
+
+        JFrame parentFrame = new JFrame();
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Zapisz podsumowania");
+
+        int userSelection = fileChooser.showSaveDialog(parentFrame);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+
+            File fileToSave = fileChooser.getSelectedFile();
+
+            Application.instance.saveSummaries(fileToSave.getAbsolutePath());
+
+
+        }
     }
 
 }

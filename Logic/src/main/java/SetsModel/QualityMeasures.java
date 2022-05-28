@@ -13,13 +13,13 @@ public class QualityMeasures {
     @Getter private List<FuzzySet> summarizers;
     @Getter private Connector connector;
     @Getter private List<LinguisticQuantifier> quantifiers;
-    @Getter private LinguisticVariable qualifiers;
+    @Getter private List<LinguisticVariable> qualifiers;
     @Getter private Integer multiForm;
     @Getter private SummaryTypes summaryType;
 
     private Integer elementsCount;
 
-    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, LinguisticVariable qualifiers, Integer multiForm, SummaryTypes summaryType) {
+    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, List<LinguisticVariable> qualifiers, Integer multiForm, SummaryTypes summaryType) {
         this.summarizers = summarizers;
         this.connector = connector;
         this.quantifiers = quantifiers;
@@ -27,8 +27,11 @@ public class QualityMeasures {
         this.multiForm = multiForm;
         this.summaryType = summaryType;
 
-        if (qualifierList != null)
-            this.qualifier = qualifierList.get(0);
+        if (qualifierList != null) {
+
+            this.qualifier = connection(qualifierList);
+
+        }
 
         elementsCount = summarizers.get(0).getClassicSet().getElements().size();
     }
@@ -350,7 +353,17 @@ public class QualityMeasures {
         double product = 1.0;
 
         for (var sum : summarizers) {
-            product *= sum.getFunction().getCardinalityRange() / elementsCount;
+
+            Double s = 0.0;
+            for (var v:sum.getMembershipValuesList()) {
+
+                s += v;
+
+            }
+
+            s /= elementsCount;
+
+            product *= s;
         }
 
         return 1 - Math.pow(product, (double) 1 / summarizers.size());
@@ -369,10 +382,26 @@ public class QualityMeasures {
         if (qualifier == null) return 0.0;
 
         Double product = 1.0;
-        List<FuzzySet> sets = qualifiers.getAllFuzzySets();
+        List<FuzzySet> sets = new ArrayList<>();
+
+        for (var q:qualifiers
+             ) {
+
+            sets.addAll(q.getAllFuzzySets());
+        }
 
         for (var variable : sets) {
-            product *= variable.getFunction().getCardinalityRange() / elementsCount;
+
+            Double s = 0.0;
+            for (var v:variable.getMembershipValuesList()) {
+
+                s += v;
+
+            }
+
+            s /= elementsCount;
+
+            product *= s;
         }
         return 1 - Math.pow(product, (double) 1 / sets.size());
     }
@@ -381,7 +410,15 @@ public class QualityMeasures {
 
         if (qualifier == null) return 0.0;
 
-        return 2 * Math.pow(0.5, qualifiers.getAllFuzzySets().size());
+        List<FuzzySet> sets = new ArrayList<>();
+
+        for (var q:qualifiers
+        ) {
+
+            sets.addAll(q.getAllFuzzySets());
+        }
+
+        return 2 * Math.pow(0.5, sets.size());
     }
 
 }

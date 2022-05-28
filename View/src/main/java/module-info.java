@@ -13,6 +13,7 @@ module com.crs.view {
     requires java.sql;
     requires commons.math3;
     requires combinatoricslib3;
+    requires javafx.swing;
 
 
     opens com.crs.view to javafx.fxml;

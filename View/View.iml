@@ -20,6 +20,8 @@
     <orderEntry type="library" name="Maven: org.openjfx:javafx-web:win:17.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:17.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:win:17.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:18.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:18.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.controlsfx:controlsfx:11.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.dlsc.formsfx:formsfx-core:11.3.2" level="project" />
     <orderEntry type="library" name="Maven: net.synedra:validatorfx:0.1.13" level="project" />
