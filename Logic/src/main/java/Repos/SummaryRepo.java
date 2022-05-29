@@ -3,18 +3,20 @@ package Repos;
 import SetsModel.Summary;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SummaryRepo {
 
-    private List<Summary> summaries;
+    private Set<Summary> summaries;
     private Integer measureIndex;
     private Double degreeOfTruth;
 
     public SummaryRepo() {
 
-        summaries = new ArrayList<>();
+        summaries = new HashSet<Summary>();
         measureIndex = 11;
         degreeOfTruth = 0.5;
     }
@@ -22,11 +24,12 @@ public class SummaryRepo {
     public void addSummary(Summary summary) {
 
         summaries.add(summary);
+
     }
 
     public Summary getSummary(Integer index) {
 
-        return summaries.get(index);
+        return summaries.stream().toList().get(index);
     }
 
     public List<Summary> getSummaries(Double degreeOfTruth) {
@@ -40,6 +43,8 @@ public class SummaryRepo {
 
     public void addAll(List<Summary> summaries) {
         this.summaries.addAll(summaries);
+
+
     }
 
     public String getAllToString() {

@@ -68,6 +68,9 @@ public class Controller {
     List<Integer> selectedSummarizers;
     List<Integer> selectedQualifiers;
 
+    CheckComboBox<String> checkComboBox1;
+    CheckComboBox<String> checkComboBox2;
+
     public void initialize(){
 
         instance = this;
@@ -186,6 +189,14 @@ public class Controller {
 
     private void setColumnsTypesQualifier () {
 
+        if (!titledPaneQ.getChildren().isEmpty()) {
+
+            selectedQualifiers.clear();
+            checkComboBox1.getCheckModel().clearChecks();
+
+            return;
+        }
+
         final ObservableList<String> strings = FXCollections.observableArrayList();
 
         for (var o:AttributeType.values()) {
@@ -193,26 +204,37 @@ public class Controller {
             strings.add(o.toString());
         }
 
-        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+        checkComboBox1 = new CheckComboBox<String>(strings);
 
         // and listen to the relevant events (e.g. when the selected indices or
         // selected items change).
-        checkComboBox.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
+        checkComboBox1.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
             public void onChanged(ListChangeListener.Change<? extends Integer> c) {
 
                 selectedQualifiers.clear();
 
-                selectedQualifiers.addAll(checkComboBox.getCheckModel().getCheckedIndices());
+                selectedQualifiers.addAll(checkComboBox1.getCheckModel().getCheckedIndices());
+
+
             }
         });
 
-        titledPaneQ.getChildren().add(checkComboBox);
-        checkComboBox.show();
+        titledPaneQ.getChildren().add(checkComboBox1);
+        checkComboBox1.show();
+        checkComboBox1.setDisable(true);
     }
 
 
     private void setColumnsTypesSummarizer () {
 
+        if (!titledPaneS.getChildren().isEmpty()) {
+
+            selectedQualifiers.clear();
+            checkComboBox2.getCheckModel().clearChecks();
+
+            return;
+        }
+
         final ObservableList<String> strings = FXCollections.observableArrayList();
 
         for (var o:AttributeType.values()) {
@@ -220,21 +242,21 @@ public class Controller {
             strings.add(o.toString());
         }
 
-        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+        checkComboBox2 = new CheckComboBox<String>(strings);
 
         // and listen to the relevant events (e.g. when the selected indices or
         // selected items change).
-        checkComboBox.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
+        checkComboBox2.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
             public void onChanged(ListChangeListener.Change<? extends Integer> c) {
 
                 selectedSummarizers.clear();
 
-                selectedSummarizers.addAll(checkComboBox.getCheckModel().getCheckedIndices());
+                selectedSummarizers.addAll(checkComboBox2.getCheckModel().getCheckedIndices());
             }
         });
 
-        titledPaneS.getChildren().add(checkComboBox);
-        checkComboBox.show();
+        titledPaneS.getChildren().add(checkComboBox2);
+        checkComboBox2.show();
     }
 
     private void setHousesTypes() {
@@ -274,6 +296,7 @@ public class Controller {
 
     public void showSummary(String text) {
 
+        textArea.clear();
         textArea.setText(text);
     }
 
@@ -283,12 +306,18 @@ public class Controller {
         if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() >= 2){
             setComboBoxDisabled(comboBoxHouseType1, false);
             setComboBoxDisabled(comboBoxHouseType2, false);
+
         }
         else {
             setComboBoxDisabled(comboBoxHouseType1, true);
             setComboBoxDisabled(comboBoxHouseType2, true);
 
         }
+
+        if (comboBoxSummaryType.getSelectionModel().getSelectedIndex() >= 1)
+            checkComboBox1.setDisable(false);
+        else
+            checkComboBox1.setDisable(true);
     }
 
     @FXML

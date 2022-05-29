@@ -11,22 +11,15 @@ import SetsModel.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import org.apache.commons.math3.util.CombinatoricsUtils;
+
 import org.paukov.combinatorics3.Generator;
+
 
 import java.io.*;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.*;
 
-import static SetsModel.FuzzyOperationsType.Product;
 
 public class Application extends javafx.application.Application {
 
@@ -114,19 +107,22 @@ public class Application extends javafx.application.Application {
                         for(var option:optionsSummarizers) {
 
                             boolean ok = true;
-                            for (int i = 0; i < option.size(); i++) {
+
+                            for (int i = 0; i < optionsSummarizers.size(); i++) {
 
                                 if (i < variables.size()) {
-
                                     if (option.get(i) < variables.get(i).getLabels().size()) {
                                         variables.get(i).clearCurrentLabels();
                                         variables.get(i).addCurrentLabel(option.get(i));
-                                    }
-                                    else {
+                                    } else {
 
                                         ok = false;
                                         break;
                                     }
+                                }
+                                else {
+
+                                    break;
                                 }
 
                             }
@@ -157,51 +153,55 @@ public class Application extends javafx.application.Application {
                         }
 
                         for(var option:optionsSummarizers) {
+                            boolean ok = true;
 
-
-                            for (int i = 0; i < option.size(); i++) {
+                            for (int i = 0; i < optionsSummarizers.size(); i++) {
 
                                 if (i < variables.size()) {
-
                                     if (option.get(i) < variables.get(i).getLabels().size()) {
                                         variables.get(i).clearCurrentLabels();
                                         variables.get(i).addCurrentLabel(option.get(i));
 
-                                        for(var optionQ:optionsQualifiers) {
-                                            boolean ok = true;
+                                    } else {
+                                        ok = false;
+                                        break;
+                                    }
+                                }
+                                else {
+                                    break;
+                                }
 
-                                            for (int j = 0; j < optionQ.size(); j++) {
+                            }
 
-                                                if (j < qualifiers.size()) {
-
-                                                    if (optionQ.get(j) < qualifiers.get(j).getLabels().size()) {
-
-                                                        qualifiers.get(j).clearCurrentLabels();
-                                                        qualifiers.get(j).addCurrentLabel(optionQ.get(j));
-
-
-                                                    }
-                                                    else {
-                                                        ok = false;
-                                                        break;
-                                                    }
-
-                                                }
+                            for(var optionQ:optionsQualifiers) {
 
 
-                                            }
+                                for (int j = 0; j < optionsQualifiers.size(); j++) {
 
-                                            if (ok) {
-                                                SummaryMaker sum = summaryBuilder.withSummarizers(variables).
-                                                        withQuantifier(linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative)).
-                                                        withQualifiers(qualifiers).build();
+                                    if (j < qualifiers.size()) {
+                                        if (optionQ.get(j) < qualifiers.get(j).getLabels().size()) {
 
-                                                summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
-                                            }
+                                            qualifiers.get(j).clearCurrentLabels();
+                                            qualifiers.get(j).addCurrentLabel(optionQ.get(j));
+
+
+                                        } else {
+                                            ok = false;
+                                            break;
                                         }
-
+                                    }
+                                    else {
+                                        break;
                                     }
 
+                                }
+
+                                if (ok) {
+                                    SummaryMaker sum = summaryBuilder.withSummarizers(variables).
+                                            withQuantifier(linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative)).
+                                            withQualifiers(qualifiers).build();
+
+                                    summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
                                 }
 
                             }
@@ -223,10 +223,13 @@ public class Application extends javafx.application.Application {
 
     private List<List<Integer>> generateAllSummariesOptions(Integer r) {
 
-        List<List<Integer>> options = Generator.combination(0, 1, 2, 3)
-                .multi(r).stream().collect(Collectors.toList());
+        List<List<Integer>> options = new ArrayList<>();
+
+        Generator.combination(0, 1, 2, 3).multi(r).stream().forEach(combination -> Generator.permutation(combination)
+                .simple().stream().forEach(x-> options.add(x)));
 
         return options;
+
     }
 
     public void saveSummaries(String path) throws FileNotFoundException, UnsupportedEncodingException {
