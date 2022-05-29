@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,24 +87,8 @@ public class Application extends javafx.application.Application {
 
         SummaryMakerBuilder summaryBuilder = SummaryMakerBuilder.aSummaryMaker();
 
-        summaryBuilder.withConnector(Connector.and).withSummaryType(summaryType).withMultiForm(multiType)
-                .withQuantifier(linguisticQuantifierRepo.getAll());
+        summaryBuilder.withConnector(Connector.and).withSummaryType(summaryType).withMultiForm(multiType);
 
-        LinguisticVariable qualifier1 = null;
-        LinguisticVariable qualifier2 = null;
-
-        if (qualifierIndexes.get(0) != -1) {
-
-            qualifier1 = linguisticVariableRepo.getVariable(qualifierIndexes.get(0));
-
-        }
-        if (qualifierIndexes.get(1) != -1) {
-
-            qualifier2 = linguisticVariableRepo.getVariable(qualifierIndexes.get(1));
-        }
-
-        List<LinguisticQuantifier> quantifiers = (summaryType == SummaryTypes.single && multiType == 1) ?
-                linguisticQuantifierRepo.getAll() : linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative);
 
         switch(summaryType) {
 
@@ -115,116 +100,113 @@ public class Application extends javafx.application.Application {
 
                 for(int i = 0; i < summarizersIndexes.size(); i++) {
 
-                    if (i < variables.size()) {
-                        variables.get(i).setClassicSet(classicSetsSummarizers.get(i));
-                    }
+
+                     variables.get(i).setClassicSet(classicSetsSummarizers.get(i));
+
                 }
 
+                var optionsSummarizers = generateAllSummariesOptions(summarizersIndexes.size());
 
                 switch(multiType){
 
                     case 1 -> {
 
-                        for (int i = 0; i < variables.get(0).getAllFuzzySets().size(); i++) {
+                        for(var option:optionsSummarizers) {
 
-                            variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(i);
+                            boolean ok = true;
+                            for (int i = 0; i < option.size(); i++) {
 
-                            if (variables.size() > 1)
-                            for (int j = 0; j < variables.get(1).getAllFuzzySets().size(); j++) {
+                                if (i < variables.size()) {
 
-                                variables.get(1).clearCurrentLabels();
-                                variables.get(1).addCurrentLabel(j);
+                                    if (option.get(i) < variables.get(i).getLabels().size()) {
+                                        variables.get(i).clearCurrentLabels();
+                                        variables.get(i).addCurrentLabel(option.get(i));
+                                    }
+                                    else {
 
+                                        ok = false;
+                                        break;
+                                    }
+                                }
 
-                                SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers).build();
-
-                                summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
                             }
 
-                            if (variables.size() == 1) {
-                                SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).withQuantifier(quantifiers).build();
+                            if (ok) {
+                                SummaryMaker sum = summaryBuilder.withSummarizers(variables).
+                                        withQuantifier(linguisticQuantifierRepo.getAll()).build();
 
-                                summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
                             }
-
                         }
+
                     }
                     case 2 -> {
 
-                        qualifier1.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier1.getAttributeType()),
-                                qualifier1.getSpace(), false));
+                        var optionsQualifiers = generateAllSummariesOptions(qualifierIndexes.size());
 
-                        if (qualifier2 != null) {
-                            qualifier2.setClassicSet(new ClassicSet(housesRepo.getValuesOfAttribute(qualifier2.getAttributeType()),
-                                    qualifier2.getSpace(), false));
+                        List<LinguisticVariable> qualifiers = getSummarizersLinguisticVariables(qualifierIndexes);
+
+                        List<ClassicSet> classicSetsQualifiers = getSummarizersClassicSets(qualifierIndexes);
+
+
+                        for(int i = 0; i < qualifierIndexes.size(); i++) {
+
+
+                            qualifiers.get(i).setClassicSet(classicSetsQualifiers.get(i));
+
                         }
 
+                        for(var option:optionsSummarizers) {
 
 
-                        for (int i = 0; i < variables.get(0).getAllFuzzySets().size(); i++) {
+                            for (int i = 0; i < option.size(); i++) {
 
-                            variables.get(0).clearCurrentLabels();
-                            variables.get(0).addCurrentLabel(i);
+                                if (i < variables.size()) {
 
-                            for (int k = 0; k < qualifier1.getAllFuzzySets().size(); k++) {
+                                    if (option.get(i) < variables.get(i).getLabels().size()) {
+                                        variables.get(i).clearCurrentLabels();
+                                        variables.get(i).addCurrentLabel(option.get(i));
 
-                                qualifier1.clearCurrentLabels();
-                                qualifier1.addCurrentLabel(k);
+                                        for(var optionQ:optionsQualifiers) {
+                                            boolean ok = true;
 
-                                if (qualifier2 != null)
-                                for (int j = 0; j < qualifier2.getAllFuzzySets().size(); j++) {
+                                            for (int j = 0; j < optionQ.size(); j++) {
 
-                                    qualifier2.clearCurrentLabels();
-                                    qualifier2.addCurrentLabel(j);
+                                                if (j < qualifiers.size()) {
 
-                                    if (variables.size() > 1)
-                                    for (int h = 0; h < variables.get(1).getAllFuzzySets().size(); h++) {
+                                                    if (optionQ.get(j) < qualifiers.get(j).getLabels().size()) {
 
-                                        variables.get(1).clearCurrentLabels();
-                                        variables.get(1).addCurrentLabel(h);
+                                                        qualifiers.get(j).clearCurrentLabels();
+                                                        qualifiers.get(j).addCurrentLabel(optionQ.get(j));
 
 
-                                        SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers)
-                                                .withQualifiers(Arrays.asList(qualifier1, qualifier2)).build();
+                                                    }
+                                                    else {
+                                                        ok = false;
+                                                        break;
+                                                    }
 
-                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
+                                                }
+
+
+                                            }
+
+                                            if (ok) {
+                                                SummaryMaker sum = summaryBuilder.withSummarizers(variables).
+                                                        withQuantifier(linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative)).
+                                                        withQualifiers(qualifiers).build();
+
+                                                summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
+                                            }
+                                        }
+
                                     }
 
-                                    if (variables.size() == 1) {
-                                        SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
-                                                withQuantifier(quantifiers)
-                                                .withQualifiers(Arrays.asList(qualifier1, qualifier2)).build();
-
-                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
-                                    }
                                 }
 
-                                if (variables.size() > 1 && qualifier2 == null) {
-                                    for (int j = 0; j < variables.get(1).getAllFuzzySets().size(); j++) {
-
-                                        variables.get(1).clearCurrentLabels();
-                                        variables.get(1).addCurrentLabel(j);
-
-
-                                        SummaryMaker summary = summaryBuilder.withSummarizers(variables).withQuantifier(quantifiers)
-                                                .withQualifiers(Arrays.asList(qualifier1)).build();
-
-                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
-                                    }
-
-                                    if (variables.size() == 1) {
-                                        SummaryMaker summary = summaryBuilder.withSummarizers(Arrays.asList(variables.get(0))).
-                                                withQuantifier(quantifiers)
-                                                .withQualifiers(Arrays.asList(qualifier1)).build();
-
-                                        summaryRepo.addAll(summary.getStringSummariesWithAverageT(weights));
-                                    }
-                                }
                             }
 
                         }
-
                     }
                 }
             }
@@ -237,6 +219,14 @@ public class Application extends javafx.application.Application {
         summaryRepo.setMeasureToSort(Controller.instance.getMeasureIndexToSort());
         Controller.instance.showSummary(summaryRepo.getAllToString());
 
+    }
+
+    private List<List<Integer>> generateAllSummariesOptions(Integer r) {
+
+        List<List<Integer>> options = Generator.combination(0, 1, 2, 3)
+                .multi(r).stream().collect(Collectors.toList());
+
+        return options;
     }
 
     public void saveSummaries(String path) throws FileNotFoundException, UnsupportedEncodingException {

@@ -42,50 +42,18 @@
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 1 - kwalifikator" TilePane.alignment="CENTER">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybuty - kwalifikator" TilePane.alignment="CENTER">
                         <content>
-                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                 <ComboBox fx:id="comboBoxColumnTypeQualifier1" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
-                              </children>
-                           </AnchorPane>
+                           <AnchorPane fx:id="titledPaneQ" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                         </content>
                         <TilePane.margin>
                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                         </TilePane.margin>
                      </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 2 - kwalifikator">
+                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybuty - sumaryzator">
                         <content>
-                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                 <ComboBox fx:id="comboBoxColumnTypeQualifier2" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
-                              </children>
-                           </AnchorPane>
+                           <AnchorPane fx:id="titledPaneS" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                         </content>
-                     </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 1 - sumaryzator" TilePane.alignment="CENTER">
-                        <content>
-                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                 <ComboBox fx:id="comboBoxColumnTypeSummarizer1" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
-                              </children>
-                           </AnchorPane>
-                        </content>
-                        <TilePane.margin>
-                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                        </TilePane.margin>
-                     </TitledPane>
-                     <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Atrybut 2 - sumaryzator">
-                        <content>
-                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                              <children>
-                                 <ComboBox fx:id="comboBoxColumnTypeSummarizer2" layoutX="4.0" layoutY="8.0" prefHeight="25.0" prefWidth="320.0" />
-                              </children>
-                           </AnchorPane>
-                        </content>
-                        <TilePane.margin>
-                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                        </TilePane.margin>
                      </TitledPane>
                      <TitledPane alignment="CENTER" animated="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="64.0" prefWidth="330.0" style="-fx-background-color: black;" text="Typ mieszkania 1" TilePane.alignment="CENTER">
                         <content>

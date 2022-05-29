@@ -16,6 +16,7 @@ module com.crs.view {
     requires javafx.swing;
 
 
+
     opens com.crs.view to javafx.fxml;
     exports com.crs.view;
 

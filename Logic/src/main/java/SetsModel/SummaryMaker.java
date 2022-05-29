@@ -46,7 +46,7 @@ public class SummaryMaker {
             }
 
         this.qualityMeasures = new QualityMeasures(summarizersSets,
-                connector, quantifier, qualifiers == null ? null : qualifiersSets, qualifiers, multiForm, summaryType);
+                connector, quantifier, qualifiers == null ? null : qualifiersSets, qualifiers, multiForm, summaryType, summarizersSets.get(0).getClassicSet().getElements().size());
     }
 
 

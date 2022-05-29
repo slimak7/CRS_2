@@ -19,7 +19,7 @@ public class QualityMeasures {
 
     private Integer elementsCount;
 
-    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, List<LinguisticVariable> qualifiers, Integer multiForm, SummaryTypes summaryType) {
+    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, List<LinguisticVariable> qualifiers, Integer multiForm, SummaryTypes summaryType, Integer elementsCount) {
         this.summarizers = summarizers;
         this.connector = connector;
         this.quantifiers = quantifiers;
@@ -33,7 +33,7 @@ public class QualityMeasures {
 
         }
 
-        elementsCount = summarizers.get(0).getClassicSet().getElements().size();
+        this.elementsCount = elementsCount;
     }
 
     private FuzzySet qualifier;

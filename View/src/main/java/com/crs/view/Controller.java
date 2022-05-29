@@ -7,9 +7,15 @@ import Repos.LinguisticQuantifierRepo;
 import Repos.LinguisticVariableRepo;
 import SetsModel.AttributeType;
 import SetsModel.SummaryTypes;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.TilePane;
+import org.controlsfx.control.CheckComboBox;
 
 
 import javax.swing.*;
@@ -34,18 +40,6 @@ public class Controller {
     @FXML
     ComboBox comboBoxSummaryType;
 
-    @FXML
-    ComboBox comboBoxColumnTypeQualifier1;
-
-    @FXML
-    ComboBox comboBoxColumnTypeQualifier2;
-
-    @FXML
-    ComboBox comboBoxColumnTypeSummarizer1;
-
-    @FXML
-    ComboBox comboBoxColumnTypeSummarizer2;
-
 
     @FXML
     ComboBox comboBoxHouseType1;
@@ -65,9 +59,21 @@ public class Controller {
     @FXML
     TextField textFieldWeights;
 
+    @FXML
+    AnchorPane titledPaneQ;
+
+    @FXML
+    AnchorPane titledPaneS;
+
+    List<Integer> selectedSummarizers;
+    List<Integer> selectedQualifiers;
+
     public void initialize(){
 
         instance = this;
+
+        selectedQualifiers = new ArrayList<>();
+        selectedSummarizers = new ArrayList<>();
 
         setSummaryTypeOptions();
         setColumnsTypesQualifier();
@@ -180,38 +186,55 @@ public class Controller {
 
     private void setColumnsTypesQualifier () {
 
-        comboBoxColumnTypeQualifier1.getItems().clear();
-        comboBoxColumnTypeQualifier2.getItems().clear();
-        comboBoxColumnTypeQualifier1.setPromptText("Wybierz atrybut");
-        comboBoxColumnTypeQualifier2.setPromptText("Wybierz atrybut");
+        final ObservableList<String> strings = FXCollections.observableArrayList();
 
-        for (var v: AttributeType.values()
-             ) {
+        for (var o:AttributeType.values()) {
 
-            comboBoxColumnTypeQualifier1.getItems().add(v.toString());
-            comboBoxColumnTypeQualifier2.getItems().add(v.toString());
+            strings.add(o.toString());
         }
 
-        comboBoxColumnTypeQualifier1.getSelectionModel().clearSelection();
-        comboBoxColumnTypeQualifier2.getSelectionModel().clearSelection();
+        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+
+        // and listen to the relevant events (e.g. when the selected indices or
+        // selected items change).
+        checkComboBox.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
+            public void onChanged(ListChangeListener.Change<? extends Integer> c) {
+
+                selectedQualifiers.clear();
+
+                selectedQualifiers.addAll(checkComboBox.getCheckModel().getCheckedIndices());
+            }
+        });
+
+        titledPaneQ.getChildren().add(checkComboBox);
+        checkComboBox.show();
     }
+
 
     private void setColumnsTypesSummarizer () {
 
-        comboBoxColumnTypeSummarizer1.getItems().clear();
-        comboBoxColumnTypeSummarizer2.getItems().clear();
-        comboBoxColumnTypeSummarizer1.setPromptText("Wybierz atrybut");
-        comboBoxColumnTypeSummarizer2.setPromptText("Wybierz atrybut");
+        final ObservableList<String> strings = FXCollections.observableArrayList();
 
-        for (var v: AttributeType.values()
-        ) {
+        for (var o:AttributeType.values()) {
 
-            comboBoxColumnTypeSummarizer1.getItems().add(v.toString());
-            comboBoxColumnTypeSummarizer2.getItems().add(v.toString());
+            strings.add(o.toString());
         }
 
-        comboBoxColumnTypeSummarizer1.getSelectionModel().clearSelection();
-        comboBoxColumnTypeSummarizer2.getSelectionModel().clearSelection();
+        final CheckComboBox<String> checkComboBox = new CheckComboBox<String>(strings);
+
+        // and listen to the relevant events (e.g. when the selected indices or
+        // selected items change).
+        checkComboBox.getCheckModel().getCheckedIndices().addListener(new ListChangeListener<Integer>() {
+            public void onChanged(ListChangeListener.Change<? extends Integer> c) {
+
+                selectedSummarizers.clear();
+
+                selectedSummarizers.addAll(checkComboBox.getCheckModel().getCheckedIndices());
+            }
+        });
+
+        titledPaneS.getChildren().add(checkComboBox);
+        checkComboBox.show();
     }
 
     private void setHousesTypes() {
@@ -288,17 +311,8 @@ public class Controller {
             return;
         }
 
-        Integer summarizer1Index = comboBoxColumnTypeSummarizer1.getSelectionModel().getSelectedIndex();
-        Integer summarizer2Index = comboBoxColumnTypeSummarizer2.getSelectionModel().getSelectedIndex();
-        Integer qualifierIndex1 = comboBoxColumnTypeQualifier1.getSelectionModel().getSelectedIndex();
-        Integer qualifierIndex2 = comboBoxColumnTypeQualifier2.getSelectionModel().getSelectedIndex();
 
-        if (summarizer1Index == -1 && summarizer2Index == -1) {
-            showAlert(Alert.AlertType.ERROR, "Błąd", "Nie wybrano chociaż jednego atrybutu sumaryzatora");
-            return;
-        }
-
-        Application.instance.generateAllSummaries(summaryType, multiForm, Arrays.asList(qualifierIndex1, qualifierIndex2), Arrays.asList(summarizer1Index, summarizer2Index), truthBorder);
+        Application.instance.generateAllSummaries(summaryType, multiForm, selectedQualifiers, selectedSummarizers, truthBorder);
     }
 
     public List<Double> getWeights() {
