@@ -114,7 +114,7 @@ public class LinguisticVariablesLoadingManager {
         if (type.equals("BedroomArea"))
             return AttributeType.bedroomArea;
         if (type.equals("LivingRoomArea"))
-            return AttributeType.livingArea;
+            return AttributeType.livingRoomArea;
         if (type.equals("DiningRoomArea"))
             return AttributeType.diningRoomArea;
         if (type.equals("ElementarySchoolDistance"))
