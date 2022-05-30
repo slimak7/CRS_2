@@ -254,43 +254,30 @@ public class QualityMeasures {
     }
 
     public Double getT_3 () {
-
-        if (qualifier == null)
-            return 0.0;
-
         Double qualifierMembership = 1.0;
         Integer t = 0;
         Integer h = 0;
 
-
         FuzzySet set = connection(summarizers);
 
-        for (int i = 0; i < qualifier.getClassicSet().getElements().size(); i++) {
-
+        for (int i = 0; i < set.getClassicSet().getElements().size(); i++) {
             if (qualifier != null) {
                 qualifierMembership = qualifier.getMembershipValuesList().get(i);
             }
 
             if (qualifierMembership > 0) {
                 h++;
-
                 if (set.getMembershipValuesList().get(i) > 0.0) {
                         t++;
                     }
-
             }
         }
-
-
         return Double.valueOf(t) / h;
     }
 
     public Double getT_4 () {
-
         Double product = 1.0;
         Double T3 = getT_3();
-
-
 
         for (var sum : summarizers) {
             int r = 0;
@@ -301,7 +288,6 @@ public class QualityMeasures {
             }
             product *= (double) r / elementsCount;
         }
-
         return Math.abs(product - T3);
     }
 
@@ -324,7 +310,7 @@ public class QualityMeasures {
                 supp /= elementsCount;
             }
 
-            values.add(supp);
+            values.add(1.0 - supp);
         }
         return values;
     }
@@ -353,19 +339,11 @@ public class QualityMeasures {
         double product = 1.0;
 
         for (var sum : summarizers) {
-
-            Double s = 0.0;
-            for (var v:sum.getMembershipValuesList()) {
-
-                s += v;
-
-            }
-
-            s /= elementsCount;
-
+            Double l = sum.getClassicSet().getSpace().range.getMin();
+            Double r = sum.getClassicSet().getSpace().range.getMax();
+            Double s = sum.getFunction().getCardinalityRange() / (r-l);
             product *= s;
         }
-
         return 1 - Math.pow(product, (double) 1 / summarizers.size());
     }
 
@@ -408,7 +386,10 @@ public class QualityMeasures {
 
     public Double getT_11 () {
 
-        if (qualifier == null) return 0.0;
+        if (qualifier == null)
+        {
+            return 2 * Math.pow(0.5, elementsCount);
+        }
 
         List<FuzzySet> sets = new ArrayList<>();
 

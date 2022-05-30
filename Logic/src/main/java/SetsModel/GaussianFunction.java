@@ -21,12 +21,11 @@ public class GaussianFunction implements MembershipFunction {
 
     @Override
     public Double getSupportRange() {
-
         return r-l;
     }
 
     @Override
     public Double getCardinalityRange() {
-        return 0.5 * (r - l);
+        return Math.sqrt(2 * Math.PI) * s;
     }
 }

@@ -164,8 +164,9 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
     }
 
     public Double getDegreeOfFuzziness() {
-
-        return (double) getSupport().getElements().size() / (double) getClassicSet().getElements().size();
+        Double spaceRange = getClassicSet().getSpace().range.getMax() - getClassicSet().getSpace().range.getMin();
+        Double membershipFunctionRange = function.getSupportRange();
+        return  membershipFunctionRange/ spaceRange;
     }
 
     public Double getCardinalValue() {
