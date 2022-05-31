@@ -388,7 +388,7 @@ public class QualityMeasures {
 
         if (qualifier == null)
         {
-            return 2 * Math.pow(0.5, elementsCount);
+            return 1.0;
         }
 
         List<FuzzySet> sets = new ArrayList<>();
