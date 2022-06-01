@@ -11,21 +11,13 @@ import java.util.stream.Collectors;
 public class QualityMeasures {
 
     @Getter private List<FuzzySet> summarizers;
-    @Getter private Connector connector;
-    @Getter private List<LinguisticQuantifier> quantifiers;
-    @Getter private List<LinguisticVariable> qualifiers;
-    @Getter private Integer multiForm;
-    @Getter private SummaryTypes summaryType;
+    @Getter private SummaryMaker summaryMaker;
 
     private Integer elementsCount;
 
-    public QualityMeasures(List<FuzzySet> summarizers, Connector connector, List<LinguisticQuantifier> quantifiers, List<FuzzySet> qualifierList, List<LinguisticVariable> qualifiers, Integer multiForm, SummaryTypes summaryType, Integer elementsCount) {
+    public QualityMeasures(List<FuzzySet> summarizers, List<FuzzySet> qualifierList, SummaryMaker summaryMaker, Integer elementsCount) {
         this.summarizers = summarizers;
-        this.connector = connector;
-        this.quantifiers = quantifiers;
-        this.qualifiers = qualifiers;
-        this.multiForm = multiForm;
-        this.summaryType = summaryType;
+        this.summaryMaker = summaryMaker;
 
         if (qualifierList != null) {
 
@@ -49,13 +41,13 @@ public class QualityMeasures {
         Double m = 0.0;
         Double m2 = 0.0;
 
-        if (summaryType.equals(SummaryTypes.single)) {
+        if (summaryMaker.summaryType.equals(SummaryTypes.single)) {
 
 
             FuzzySet sumSet = connection(summarizers);
 
 
-            if (multiForm.equals(1)) {
+            if (summaryMaker.multiForm.equals(1)) {
 
                 for (var v : sumSet.getMembershipValuesList()
                 ) {
@@ -66,7 +58,7 @@ public class QualityMeasures {
                 m = Double.valueOf(elementsCount);
             }
 
-            if (multiForm.equals(2)) {
+            if (summaryMaker.multiForm.equals(2)) {
 
                 for (int i = 0; i < qualifier.getMembershipValuesList().size(); i++) {
 
@@ -85,7 +77,7 @@ public class QualityMeasures {
         }
         else {
 
-            if (multiForm.equals(1)) {
+            if (summaryMaker.multiForm.equals(1)) {
 
 
                 FuzzySet sumSet1 = connection(summarizers);
@@ -102,7 +94,7 @@ public class QualityMeasures {
                 m2 = Double.valueOf(elementsCount);
 
             }
-            if (multiForm.equals(2)) {
+            if (summaryMaker.multiForm.equals(2)) {
 
 
 
@@ -126,7 +118,7 @@ public class QualityMeasures {
 
                 m2 = Double.valueOf(elementsCount);
             }
-            if (multiForm.equals(3)) {
+            if (summaryMaker.multiForm.equals(3)) {
 
 
 
@@ -151,7 +143,7 @@ public class QualityMeasures {
                 m2 = Double.valueOf(elementsCount);
 
             }
-            if (multiForm.equals(4)) {
+            if (summaryMaker.multiForm.equals(4)) {
 
 
 
@@ -173,10 +165,10 @@ public class QualityMeasures {
             }
         }
 
-        for (var q:quantifiers) {
+        for (var q:summaryMaker.quantifier) {
 
-            if (summaryType.equals(SummaryTypes.single)) {
-                if (multiForm.equals(1)) {
+            if (summaryMaker.summaryType.equals(SummaryTypes.single)) {
+                if (summaryMaker.multiForm.equals(1)) {
 
                     if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.relative)) {
 
@@ -186,7 +178,7 @@ public class QualityMeasures {
                         measures.add(q.getSet().getFunction().calculateMembership(r));
                     }
                 }
-                if (multiForm.equals(2)) {
+                if (summaryMaker.multiForm.equals(2)) {
 
                     measures.add(q.getSet().getFunction().calculateMembership(r / r2));
 
@@ -194,7 +186,7 @@ public class QualityMeasures {
             }
             else {
 
-                if (multiForm.equals(1) || multiForm.equals(2) || multiForm.equals(3)) {
+                if (summaryMaker.multiForm.equals(1) || summaryMaker.multiForm.equals(2) || summaryMaker.multiForm.equals(3)) {
 
                     if (q.getQuantifierType().equals(LinguisticQuantifiersTypes.relative)) {
 
@@ -204,7 +196,7 @@ public class QualityMeasures {
                         measures.add(0.0);
                     }
                 }
-                if (multiForm.equals(4)) {
+                if (summaryMaker.multiForm.equals(4)) {
 
                     measures.add(lukasiewiczImplication(r / m, r2 / m2));
                 }
@@ -227,7 +219,7 @@ public class QualityMeasures {
 
         for (int i = 1; i < sets.size(); i++) {
 
-            if (connector.equals(Connector.or))
+            if (summaryMaker.connector.equals(Connector.or))
                 set = set.sum(sets.get(i));
             else
                 set = set.product(sets.get(i));
@@ -300,7 +292,7 @@ public class QualityMeasures {
 
         List<Double> values = new ArrayList<>();
 
-        for (var q:quantifiers
+        for (var q:summaryMaker.quantifier
              ) {
 
             Double supp = q.getSet().getFunction().getSupportRange();
@@ -319,7 +311,7 @@ public class QualityMeasures {
 
         List<Double> values = new ArrayList<>();
 
-        for (var q:quantifiers
+        for (var q:summaryMaker.quantifier
         ) {
 
             Double card = q.getSet().getFunction().getCardinalityRange();
@@ -362,7 +354,7 @@ public class QualityMeasures {
         Double product = 1.0;
         List<FuzzySet> sets = new ArrayList<>();
 
-        for (var q:qualifiers
+        for (var q:summaryMaker.qualifiers
              ) {
 
             sets.addAll(q.getAllFuzzySets());
@@ -393,7 +385,7 @@ public class QualityMeasures {
 
         List<FuzzySet> sets = new ArrayList<>();
 
-        for (var q:qualifiers
+        for (var q:summaryMaker.qualifiers
         ) {
 
             sets.addAll(q.getAllFuzzySets());

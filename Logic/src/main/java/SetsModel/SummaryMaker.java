@@ -10,13 +10,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SummaryMaker {
 
-    @Getter private List<LinguisticVariable> qualifiers;
-    @Getter private List<LinguisticQuantifier> quantifier;
-    @Getter private List<LinguisticVariable> summarizers;
-    @Getter private Integer multiForm;
-    @Getter private SummaryTypes summaryType;
-    @Getter private QualityMeasures qualityMeasures;
-    @Getter private Connector connector;
+    @Getter public List<LinguisticVariable> qualifiers;
+    @Getter public List<LinguisticQuantifier> quantifier;
+    @Getter public List<LinguisticVariable> summarizers;
+    @Getter public Integer multiForm;
+    @Getter public SummaryTypes summaryType;
+    @Getter public QualityMeasures qualityMeasures;
+    @Getter public Connector connector;
 
     private Double T_2, T_3, T_4, T_5, T_8, T_9, T_10, T_11;
 
@@ -45,8 +45,7 @@ public class SummaryMaker {
                 qualifiersSets.addAll(qualifier.getCurrentFuzzySet());
             }
 
-        this.qualityMeasures = new QualityMeasures(summarizersSets,
-                connector, quantifier, qualifiers == null ? null : qualifiersSets, qualifiers, multiForm, summaryType, summarizersSets.get(0).getClassicSet().getElements().size());
+        this.qualityMeasures = new QualityMeasures(summarizersSets, qualifiers == null ? null : qualifiersSets, this, summarizersSets.get(0).getClassicSet().getElements().size());
     }
 
 
