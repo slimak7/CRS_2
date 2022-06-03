@@ -321,11 +321,11 @@ public class Controller {
     }
 
     @FXML
-    public void generateAllSummaries() {
+    public void generateAllSummaries() throws CloneNotSupportedException {
 
         Integer summaryTypeIndex = comboBoxSummaryType.getSelectionModel().getSelectedIndex();
 
-        SummaryTypes summaryType = (summaryTypeIndex > 2) ? SummaryTypes.multi : SummaryTypes.single;
+        SummaryTypes summaryType = (summaryTypeIndex > 1) ? SummaryTypes.multi : SummaryTypes.single;
 
         Integer multiForm = (summaryType.equals(SummaryTypes.single)) ? summaryTypeIndex + 1 : summaryTypeIndex - 1;
 
@@ -340,8 +340,19 @@ public class Controller {
             return;
         }
 
+        List<String> houseType = new ArrayList<String>();
 
-        Application.instance.generateAllSummaries(summaryType, multiForm, selectedQualifiers, selectedSummarizers, truthBorder);
+        if (comboBoxHouseType1.getSelectionModel().getSelectedIndex() != -1) {
+
+            houseType.add((String) comboBoxHouseType1.getSelectionModel().getSelectedItem());
+        }
+        if (comboBoxHouseType2.getSelectionModel().getSelectedIndex() != -1) {
+
+            houseType.add((String) comboBoxHouseType2.getSelectionModel().getSelectedItem());
+        }
+
+
+        Application.instance.generateAllSummaries(summaryType, multiForm, selectedQualifiers, selectedSummarizers, truthBorder, houseType);
     }
 
     public List<Double> getWeights() {

@@ -12,7 +12,7 @@ import java.util.Set;
 
 @ToString
 @AllArgsConstructor
-public class ClassicSet implements SetsOperations<ClassicSet> {
+public class ClassicSet implements SetsOperations<ClassicSet>, Cloneable {
 
     @Getter private List<Double> elements;
 
@@ -169,4 +169,8 @@ public class ClassicSet implements SetsOperations<ClassicSet> {
    }
 
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

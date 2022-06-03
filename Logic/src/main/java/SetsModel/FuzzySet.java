@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ToString
-public class FuzzySet implements SetsOperations<FuzzySet> {
+public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
 
     @Getter private ClassicSet classicSet;
     @Getter private MembershipFunction function;
@@ -251,4 +251,8 @@ public class FuzzySet implements SetsOperations<FuzzySet> {
         return true;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

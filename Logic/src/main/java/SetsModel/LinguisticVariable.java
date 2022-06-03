@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ToString
-public class LinguisticVariable {
+public class LinguisticVariable implements Cloneable {
 
     @Getter private AttributeType attributeType;
 
@@ -144,4 +144,8 @@ public class LinguisticVariable {
         currentLabels.clear();
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

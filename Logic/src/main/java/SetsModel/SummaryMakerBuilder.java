@@ -10,6 +10,7 @@ public final class SummaryMakerBuilder {
     private SummaryTypes summaryType;
     private QualityMeasures qualityMeasures;
     private Connector connector;
+    private List<String> houseTypes;
 
     private SummaryMakerBuilder() {
     }
@@ -53,7 +54,12 @@ public final class SummaryMakerBuilder {
         return this;
     }
 
+    public SummaryMakerBuilder withHouseTypes(List<String> houseTypes) {
+        this.houseTypes = houseTypes;
+        return this;
+    }
+
     public SummaryMaker build() {
-        return new SummaryMaker(qualifiers, quantifier, summarizers, multiForm, summaryType, qualityMeasures, connector);
+        return new SummaryMaker(qualifiers, quantifier, summarizers, multiForm, summaryType, qualityMeasures, connector, houseTypes);
     }
 }

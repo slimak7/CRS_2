@@ -80,13 +80,13 @@ public class QualityMeasures {
             if (summaryMaker.multiForm.equals(1)) {
 
 
-                FuzzySet sumSet1 = connection(summarizers);
+                FuzzySet sumSet1 = connection(summarizers.subList(0, (summarizers.size()/2)));
 
                 r = sumSet1.getCardinalValue();
 
                 m = Double.valueOf(elementsCount);
 
-                FuzzySet sumSet2 = connection(summarizers);
+                FuzzySet sumSet2 = connection(summarizers.subList((summarizers.size()/2), summarizers.size()));
 
 
                 r2 = sumSet2.getCardinalValue();
@@ -98,7 +98,7 @@ public class QualityMeasures {
 
 
 
-                FuzzySet sumSet1 = connection(summarizers);
+                FuzzySet sumSet1 = connection(summarizers.subList(0, (summarizers.size()/2)));
 
 
                 r = sumSet1.getCardinalValue();
@@ -106,7 +106,7 @@ public class QualityMeasures {
                 m = Double.valueOf(elementsCount);
 
 
-                FuzzySet sumSet2 = connection(summarizers);
+                FuzzySet sumSet2 = connection(summarizers.subList((summarizers.size()/2), summarizers.size()));
 
 
                 FuzzySet sq = sumSet2.product(qualifier);
@@ -122,7 +122,7 @@ public class QualityMeasures {
 
 
 
-                FuzzySet sumSet1 = connection(summarizers);
+                FuzzySet sumSet1 = connection(summarizers.subList(0, (summarizers.size()/2)));
 
 
                 FuzzySet sq = qualifier.product(sumSet1);
@@ -135,7 +135,7 @@ public class QualityMeasures {
                 m = Double.valueOf(elementsCount);
 
 
-                FuzzySet sumSet2 = connection(summarizers);
+                FuzzySet sumSet2 = connection(summarizers.subList((summarizers.size()/2), summarizers.size()));
 
 
                 r2 = sumSet2.getCardinalValue();
@@ -148,7 +148,7 @@ public class QualityMeasures {
 
 
 
-                FuzzySet sumSet1 = connection(summarizers);
+                FuzzySet sumSet1 = connection(summarizers.subList(0, (summarizers.size()/2)));
 
 
                 r = sumSet1.getCardinalValue();
@@ -157,14 +157,15 @@ public class QualityMeasures {
 
 
 
-                FuzzySet sumSet2 = connection(summarizers);
+                FuzzySet sumSet2 = connection(summarizers.subList((summarizers.size()/2), summarizers.size()));
 
 
-                r2 = sumSet1.getCardinalValue();
+                r2 = sumSet2.getCardinalValue();
                 m2 = Double.valueOf(elementsCount);
             }
         }
 
+        if (summaryMaker.quantifier != null)
         for (var q:summaryMaker.quantifier) {
 
             if (summaryMaker.summaryType.equals(SummaryTypes.single)) {
@@ -196,15 +197,14 @@ public class QualityMeasures {
                         measures.add(0.0);
                     }
                 }
-                if (summaryMaker.multiForm.equals(4)) {
 
-                    measures.add(lukasiewiczImplication(r / m, r2 / m2));
-                }
-                else {
-                    measures.add(0.0);
-                }
 
             }
+        }
+
+        if (summaryMaker.multiForm.equals(4)) {
+
+            measures.add(lukasiewiczImplication(r / m, r2 / m2));
         }
 
         return measures;
@@ -252,13 +252,19 @@ public class QualityMeasures {
 
         FuzzySet set = connection(summarizers);
 
+
+
         for (int i = 0; i < set.getClassicSet().getElements().size(); i++) {
             if (qualifier != null) {
-                qualifierMembership = qualifier.getMembershipValuesList().get(i);
+
+                if (qualifier.getMembershipValuesList().size() > i)
+                    qualifierMembership = qualifier.getMembershipValuesList().get(i);
             }
 
             if (qualifierMembership > 0) {
                 h++;
+
+                if (set.getMembershipValuesList().size() > i)
                 if (set.getMembershipValuesList().get(i) > 0.0) {
                         t++;
                     }
@@ -292,6 +298,12 @@ public class QualityMeasures {
 
         List<Double> values = new ArrayList<>();
 
+        if (summaryMaker.quantifier == null)
+        {
+            values.add(1.0);
+            return values;
+        }
+
         for (var q:summaryMaker.quantifier
              ) {
 
@@ -310,6 +322,11 @@ public class QualityMeasures {
     public List<Double> getT_7 () {
 
         List<Double> values = new ArrayList<>();
+
+        if (summaryMaker.quantifier == null) {
+            values.add(1.0);
+            return values;
+        }
 
         for (var q:summaryMaker.quantifier
         ) {

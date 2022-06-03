@@ -20,7 +20,9 @@ public class SummaryMaker {
 
     private Double T_2, T_3, T_4, T_5, T_8, T_9, T_10, T_11;
 
-    public SummaryMaker(List<LinguisticVariable> qualifiers, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector) {
+    private List<String> houseTypes;
+
+    public SummaryMaker(List<LinguisticVariable> qualifiers, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector, List<String> houseTypes) {
         this.qualifiers = qualifiers;
         this.quantifier = quantifier;
         this.summarizers = summarizers;
@@ -28,6 +30,7 @@ public class SummaryMaker {
         this.summaryType = summaryType;
         this.qualityMeasures = qualityMeasures;
         this.connector = connector;
+        this.houseTypes = houseTypes;
 
         List<FuzzySet> summarizersSets = new ArrayList<FuzzySet>();
 
@@ -67,6 +70,7 @@ public class SummaryMaker {
 
         List<Summary> summaries = new ArrayList<>();
 
+        if (quantifier != null)
         for (int i = 0; i < quantifier.size(); i++) {
 
             String text = "";
@@ -89,6 +93,7 @@ public class SummaryMaker {
 
 
                 } else {
+
 
                     text += " domów, które są/mają ";
 
@@ -116,12 +121,88 @@ public class SummaryMaker {
 
             } else {
 
+                text += quantifier.get(i).name;
+
+                if (multiForm.equals(1)) {
+
+
+                    text += " domy typu" + houseTypes.get(0) + " w porównaniu do domów typu " + houseTypes.get(1);
+
+                    text += " są/mają " + summarizers.get(0).getString();
+
+                    for (int j = 1; j < summarizers.size()/2; j++) {
+
+                        text += " " + connector.toString() + " " + summarizers.get(j).getString();
+                    }
+                }
+                if (multiForm.equals(2)) {
+
+                    text += " domy typu " + houseTypes.get(0) + " w porównaniu do tych domów typu " + houseTypes.get(1) + ", które są/mają ";
+
+                    int j = 0;
+                    for (var q:qualifiers
+                    ) {
+
+                        text += q.getString();
+
+                        if (j < qualifiers.size()-1)
+                            text += " i ";
+
+                        j++;
+                    }
+
+                    text += " są/mają " + summarizers.get(0).getString();
+
+                    for (j = 1; j < summarizers.size()/2; j++) {
+
+                        text += " " + connector.toString() + " " + summarizers.get(j).getString();
+                    }
+                }
+                if (multiForm.equals(3)) {
+
+                    text += " domy typu " + houseTypes.get(0) + ", które są/mają ";
+
+                    int j = 0;
+                    for (var q:qualifiers
+                    ) {
+
+                        text += q.getString();
+
+                        if (j < qualifiers.size()-1)
+                            text += " i ";
+
+                        j++;
+                    }
+
+                    text += " w porównaniu do domów typu " + houseTypes.get(1);
+                    text += " są/mają " + summarizers.get(0).getString();
+
+                    for (j = 1; j < summarizers.size()/2; j++) {
+
+                        text += " " + connector.toString() + " " + summarizers.get(j).getString();
+                    }
+                }
 
             }
 
 
             summaries.add(new Summary(text, Arrays.asList(T_1.get(i), T_2, T_3, T_4, T_5, T_6.get(i), T_7.get(i), T_8, T_9, T_10, T_11,
                     getAverageMeasure(T_1.get(i), T_6.get(i), T_7.get(i), weights))));
+        }
+
+        if (multiForm.equals(4)) {
+
+            String text = "Więcej domów typu " + houseTypes.get(0) + " niż " + "domów typu " + houseTypes.get(1);
+
+            text += " są/mają " + summarizers.get(0).getString();
+
+            for (int j = 1; j < summarizers.size()/2; j++) {
+
+                text += " " + connector.toString() + " " + summarizers.get(j).getString();
+            }
+
+            summaries.add(new Summary(text, Arrays.asList(T_1.get(0), T_2, T_3, T_4, T_5, T_6.get(0), T_7.get(0), T_8, T_9, T_10, T_11,
+                    getAverageMeasure(T_1.get(0), T_6.get(0), T_7.get(0), weights))));
         }
 
         return summaries;

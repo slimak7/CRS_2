@@ -13,7 +13,7 @@ import org.decimal4j.util.DoubleRounder;
 
 @ToString
 @AllArgsConstructor
-public class Space {
+public class Space implements Cloneable {
 
     public enum SpaceType{
         discrete, dense
@@ -31,4 +31,8 @@ public class Space {
         return false;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
