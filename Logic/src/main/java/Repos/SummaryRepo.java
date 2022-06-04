@@ -2,6 +2,8 @@ package Repos;
 
 import SetsModel.Summary;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -63,9 +65,12 @@ public class SummaryRepo {
 
         String text = "";
 
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.HALF_EVEN);
+
         for (var s:sum) {
 
-            text += s.getText() + " [" + s.getQualityMeasures().get(measureIndex) + "]" + "\n";
+            text += s.getText() + " [" + df.format(s.getQualityMeasures().get(measureIndex)) + "]" + "\n";
         }
 
         return text;
