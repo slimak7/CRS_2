@@ -92,7 +92,7 @@ public class Application extends javafx.application.Application {
 
                 for(List<Integer> summarizersSubset : summarizersSubsets)
                 {
-                    if(summarizersSubset.isEmpty() || summarizersSubset.size()>3)
+                    if(summarizersSubset.isEmpty() || summarizersSubset.size()>2)
                     {
                         continue;
                     }
@@ -151,6 +151,17 @@ public class Application extends javafx.application.Application {
 
                             for(List<Integer> qualifierSubset : qualifierSubsets) {
                                 if (qualifierSubset.isEmpty() || qualifierSubset.size() > 2) {
+                                    continue;
+                                }
+                                Boolean containFlag = false;
+                                for (int idx:qualifierSubset) {
+                                    if(summarizersSubset.contains(idx))
+                                    {
+                                        containFlag = true;
+                                    }
+                                }
+                                if (containFlag)
+                                {
                                     continue;
                                 }
 

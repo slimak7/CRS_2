@@ -126,7 +126,7 @@ public class SummaryMaker {
                 if (multiForm.equals(1)) {
 
 
-                    text += " domy typu" + houseTypes.get(0) + " w porównaniu do domów typu " + houseTypes.get(1);
+                    text += " domy typu " + houseTypes.get(0) + " w porównaniu do domów typu " + houseTypes.get(1);
 
                     text += " są/mają " + summarizers.get(0).getString();
 
