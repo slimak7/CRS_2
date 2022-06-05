@@ -76,13 +76,16 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
         if (classicSet.isComplement() || classicSet.getElements() == null)
             return values;
 
+        int i = 0;
         for (var element:classicSet.getElements()
              ) {
 
             if (!isComplement)
-                values.add(calculateMembership(element));
+                values.add(calculateMembership(i));
             else
-                values.add(1 - calculateMembership(element));
+                values.add(1 - calculateMembership(i));
+
+            i++;
         }
 
         return values;
@@ -201,7 +204,9 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
         return true;
     }
 
-    public Double calculateMembership(Double x) {
+    public Double calculateMembership(int index) {
+
+        Double x = classicSet.getElements().get(index);
 
         if (operationType.equals(FuzzyOperationsType.None)) {
 
@@ -216,7 +221,7 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
                     List<Double> options = new ArrayList<>();
 
                     options.add(function.calculateMembership(x));
-                    options.add(set.calculateMembership(x));
+                    options.add(set.calculateMembership(index));
 
                     return options.stream().max(Double::compareTo).orElse(0.0);
 
@@ -226,7 +231,7 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
                     List<Double> options = new ArrayList<>();
 
                     options.add(function.calculateMembership(x));
-                    options.add(set.calculateMembership(x));
+                    options.add(set.calculateMembership(index));
 
                     return options.stream().min(Double::compareTo).orElse(0.0);
 
