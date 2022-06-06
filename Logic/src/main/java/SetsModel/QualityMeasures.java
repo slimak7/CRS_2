@@ -407,16 +407,7 @@ public class QualityMeasures {
         {
             return 1.0;
         }
-
-        List<FuzzySet> sets = new ArrayList<>();
-
-        for (var q:summaryMaker.qualifiers
-        ) {
-
-            sets.addAll(q.getAllFuzzySets());
-        }
-
-        return 2 * Math.pow(0.5, sets.size());
+        return 2 * Math.pow(0.5, summaryMaker.qualifiers.size());
     }
 
 }

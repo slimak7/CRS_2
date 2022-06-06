@@ -539,7 +539,13 @@ public class Application extends javafx.application.Application {
         }
 
         summaryRepo.setDegreeOfTruth(truthBorder);
-        summaryRepo.setMeasureToSort(Controller.instance.getMeasureIndexToSort());
+
+        int index = Controller.instance.getMeasureIndexToSort();
+
+        if (summaryType.equals(SummaryTypes.multi))
+            index = 0;
+
+        summaryRepo.setMeasureToSort(index);
         Controller.instance.showSummary(summaryRepo.getAllToString());
 
     }

@@ -55,17 +55,22 @@ public class SummaryMaker {
     public List<Summary> getStringSummariesWithAverageT(List<Double> weights) {
 
         List<Double> T_1 = qualityMeasures.getT_1();
-        List<Double> T_6 = qualityMeasures.getT_6();
-        List<Double> T_7 = qualityMeasures.getT_7();
 
-        T_2 = qualityMeasures.getT_2();
-        T_3 = qualityMeasures.getT_3();
-        T_4 = qualityMeasures.getT_4();
-        T_5 = qualityMeasures.getT_5();
-        T_8 = qualityMeasures.getT_8();
-        T_9 = qualityMeasures.getT_9();
-        T_10 = qualityMeasures.getT_10();
-        T_11 = qualityMeasures.getT_11();
+        if (summaryType.equals(SummaryTypes.multi)) {
+
+            List<Double> T_6 = qualityMeasures.getT_6();
+            List<Double> T_7 = qualityMeasures.getT_7();
+
+            T_2 = qualityMeasures.getT_2();
+            T_3 = qualityMeasures.getT_3();
+            T_4 = qualityMeasures.getT_4();
+            T_5 = qualityMeasures.getT_5();
+            T_8 = qualityMeasures.getT_8();
+            T_9 = qualityMeasures.getT_9();
+            T_10 = qualityMeasures.getT_10();
+            T_11 = qualityMeasures.getT_11();
+
+        }
 
 
         List<Summary> summaries = new ArrayList<>();
@@ -186,8 +191,7 @@ public class SummaryMaker {
             }
 
 
-            summaries.add(new Summary(text, Arrays.asList(T_1.get(i), T_2, T_3, T_4, T_5, T_6.get(i), T_7.get(i), T_8, T_9, T_10, T_11,
-                    getAverageMeasure(T_1.get(i), T_6.get(i), T_7.get(i), weights))));
+            summaries.add(new Summary(text, Arrays.asList(T_1.get(i))));
         }
 
         if (multiForm.equals(4)) {
@@ -201,8 +205,7 @@ public class SummaryMaker {
                 text += " " + connector.toString() + " " + summarizers.get(j).getString();
             }
 
-            summaries.add(new Summary(text, Arrays.asList(T_1.get(0), T_2, T_3, T_4, T_5, T_6.get(0), T_7.get(0), T_8, T_9, T_10, T_11,
-                    getAverageMeasure(T_1.get(0), T_6.get(0), T_7.get(0), weights))));
+            summaries.add(new Summary(text, Arrays.asList(T_1.get(0))));
         }
 
         return summaries;
