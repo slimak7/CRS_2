@@ -69,6 +69,10 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
 
     }
 
+    public Range getUniverse() {
+        return new Range(0.0, 1.0);
+    }
+
     private List<Double> getMembershipValues() {
 
         List<Double> values = new ArrayList<>();

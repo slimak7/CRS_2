@@ -124,8 +124,16 @@ public class QualityMeasures {
 
                 FuzzySet sumSet1 = connection(summarizers.subList(0, (summarizers.size()/2)));
 
+                FuzzySet sq;
 
-                FuzzySet sq = qualifier.product(sumSet1);
+                if (qualifier.getMembershipValuesList().size() > sumSet1.getMembershipValuesList().size())
+                {
+                    sq = qualifier.product(sumSet1);
+                }
+                else
+                {
+                    sq = sumSet1.product(qualifier);
+                }
 
                 for(int i = 0; i < sq.getMembershipValuesList().size(); i++) {
 

@@ -243,7 +243,7 @@ public class Application extends javafx.application.Application {
 
                 for(List<Integer> summarizersSubset : summarizersSubsets)
                 {
-                    if(summarizersSubset.isEmpty() || summarizersSubset.size()>3)
+                    if(summarizersSubset.isEmpty() || summarizersSubset.size()>2)
                     {
                         continue;
                     }
@@ -314,7 +314,7 @@ public class Application extends javafx.application.Application {
                             List<List<Integer>> qualifierSubsets = subsets(qualifierIndexes);
 
                             for(List<Integer> qualifierSubset : qualifierSubsets) {
-                                if (qualifierSubset.isEmpty() || qualifierSubset.size() > 2) {
+                                if (qualifierSubset.isEmpty() || qualifierSubset.size() > 1) {
                                     continue;
                                 }
 
@@ -407,7 +407,7 @@ public class Application extends javafx.application.Application {
                             List<List<Integer>> qualifierSubsets = subsets(qualifierIndexes);
 
                             for(List<Integer> qualifierSubset : qualifierSubsets) {
-                                if (qualifierSubset.isEmpty() || qualifierSubset.size() > 2) {
+                                if (qualifierSubset.isEmpty() || qualifierSubset.size() > 1) {
                                     continue;
                                 }
 
