@@ -56,7 +56,7 @@ public class SummaryMaker {
 
         List<Double> T_1 = qualityMeasures.getT_1();
 
-        if (summaryType.equals(SummaryTypes.multi)) {
+        if (summaryType.equals(SummaryTypes.single)) {
 
             List<Double> T_6 = qualityMeasures.getT_6();
             List<Double> T_7 = qualityMeasures.getT_7();
