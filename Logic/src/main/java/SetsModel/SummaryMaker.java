@@ -20,6 +20,8 @@ public class SummaryMaker {
 
     private Double T_2, T_3, T_4, T_5, T_8, T_9, T_10, T_11;
 
+    private List<Double>  T_6,  T_7;
+
     private List<String> houseTypes;
 
     public SummaryMaker(List<LinguisticVariable> qualifiers, List<LinguisticQuantifier> quantifier, List<LinguisticVariable> summarizers, Integer multiForm, SummaryTypes summaryType, QualityMeasures qualityMeasures, Connector connector, List<String> houseTypes) {
@@ -58,8 +60,8 @@ public class SummaryMaker {
 
         if (summaryType.equals(SummaryTypes.single)) {
 
-            List<Double> T_6 = qualityMeasures.getT_6();
-            List<Double> T_7 = qualityMeasures.getT_7();
+            T_6 = qualityMeasures.getT_6();
+            T_7 = qualityMeasures.getT_7();
 
             T_2 = qualityMeasures.getT_2();
             T_3 = qualityMeasures.getT_3();
@@ -123,7 +125,8 @@ public class SummaryMaker {
 
                 }
 
-
+                summaries.add(new Summary(text, Arrays.asList(T_1.get(i), T_2, T_3, T_4, T_5, T_6.get(i), T_7.get(i), T_8, T_9, T_10, T_11,
+                        getAverageMeasure(T_1.get(i), T_6.get(i), T_7.get(i), weights))));
             } else {
 
                 text += quantifier.get(i).name;
@@ -187,11 +190,8 @@ public class SummaryMaker {
                         text += " " + connector.toString() + " " + summarizers.get(j).getString();
                     }
                 }
-
+                summaries.add(new Summary(text, Arrays.asList(T_1.get(i))));
             }
-
-
-            summaries.add(new Summary(text, Arrays.asList(T_1.get(i))));
         }
 
         if (multiForm.equals(4)) {
