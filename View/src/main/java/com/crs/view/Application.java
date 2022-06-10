@@ -9,7 +9,10 @@ import Repos.LinguisticVariableRepo;
 import Repos.SummaryRepo;
 import SetsModel.*;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.paukov.combinatorics3.Generator;
@@ -36,6 +39,8 @@ public class Application extends javafx.application.Application {
 
     private List<Double> weights;
 
+    private Stage mainStage;
+
     @Override
     public void start(Stage stage) throws IOException, URISyntaxException, SQLException {
         FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("startView.fxml"));
@@ -45,6 +50,8 @@ public class Application extends javafx.application.Application {
 
 
         stage.show();
+
+        mainStage = stage;
 
         initialize();
     }
@@ -68,6 +75,7 @@ public class Application extends javafx.application.Application {
         summaryRepo = new SummaryRepo();
 
         Controller.instance.setObjects(housesRepo, linguisticVariableRepo, linguisticQuantifierRepo);
+
     }
 
 
@@ -644,6 +652,35 @@ public class Application extends javafx.application.Application {
             // remove
             resultList.remove(resultList.size() - 1);
         }
+    }
+
+    public void ShowOptionsWindow() throws IOException {
+
+        Stage dialog = new Stage();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("createThingsView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        dialog.setTitle("Twórz własne sumaryzatory, kwalifikatory oraz kwantyfikatory!");
+        dialog.setScene(scene);
+
+        dialog.initOwner(mainStage);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.showAndWait();
+
+
+    }
+
+    public LinguisticQuantifierRepo getLinguisticQuantifierRepo() {
+        return linguisticQuantifierRepo;
+    }
+
+    public LinguisticVariableRepo getLinguisticVariableRepo() {
+        return linguisticVariableRepo;
+    }
+
+    public void update() {
+
+        Controller.instance.reset();
     }
 }
 

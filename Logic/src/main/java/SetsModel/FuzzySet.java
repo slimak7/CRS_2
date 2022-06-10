@@ -39,6 +39,7 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
     public FuzzySet(MembershipFunction function) {
         this.function = function;
         isComplement = false;
+        operationType = FuzzyOperationsType.None;
     }
 
     public FuzzySet(MembershipFunction function, boolean isComplement) {

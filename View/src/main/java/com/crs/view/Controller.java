@@ -21,6 +21,7 @@ import org.controlsfx.control.CheckComboBox;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -407,6 +408,11 @@ public class Controller {
 
 
         }
+    }
+
+    @FXML public void showOptionsDialog() throws IOException {
+
+        Application.instance.ShowOptionsWindow();
     }
 
 }

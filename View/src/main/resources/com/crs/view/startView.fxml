@@ -89,6 +89,11 @@
                            <Font size="19.0" />
                         </font>
                      </Button>
+                     <Button mnemonicParsing="false" onAction="#showOptionsDialog" prefHeight="45.0" prefWidth="187.0" text="Dodaj...">
+                        <font>
+                           <Font size="19.0" />
+                        </font>
+                     </Button>
                   </children>
                </TilePane>
             </top>
