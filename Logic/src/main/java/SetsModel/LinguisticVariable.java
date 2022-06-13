@@ -148,4 +148,18 @@ public class LinguisticVariable implements Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
+
+    public void reassignLabels() {
+
+        List<String> strings = getAllLabels();
+
+        List<FuzzySet> sets = getAllFuzzySets();
+
+        labels = new LinkedHashMap<>();
+
+        for(int i = 0; i < strings.size(); i++) {
+
+            labels.put(strings.get(i), new FuzzySet(sets.get(i).getFunction()));
+        }
+    }
 }

@@ -266,6 +266,7 @@ public class Application extends javafx.application.Application {
 
                         variablesCopy.add((LinguisticVariable) v.clone());
                     }
+                    variablesCopy.forEach(x -> x.reassignLabels());
 
                     variables = Stream.concat(variables.stream(), variablesCopy.stream()).toList();
 
