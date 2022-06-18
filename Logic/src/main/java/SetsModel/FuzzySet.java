@@ -188,11 +188,7 @@ public class FuzzySet implements SetsOperations<FuzzySet>, Cloneable {
         Double value = 0.0;
 
         for (int i = 0; i < membershipValuesList.size(); i++) {
-
-            if (membershipValuesList.get(i).equals(0.0)) {
-
-                value++;
-            }
+            value += membershipValuesList.get(i);
         }
 
         return value;
