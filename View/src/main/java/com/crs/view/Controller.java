@@ -310,7 +310,7 @@ public class Controller {
 
         }
         else {
-            setComboBoxDisabled(comboBoxHouseType1, true);
+            setComboBoxDisabled(comboBoxHouseType1, false);
             setComboBoxDisabled(comboBoxHouseType2, true);
 
         }

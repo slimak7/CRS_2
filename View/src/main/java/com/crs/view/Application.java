@@ -96,6 +96,9 @@ public class Application extends javafx.application.Application {
 
             case single -> {
 
+
+                String houseType = (houseTypes.size() > 0) ? houseTypes.get(0) : "";
+
                 List<List<Integer>> summarizersSubsets = subsets(summarizersIndexes);
 
                 for(List<Integer> summarizersSubset : summarizersSubsets)
@@ -105,7 +108,7 @@ public class Application extends javafx.application.Application {
                         continue;
                     }
 
-                    List<ClassicSet> classicSetsSummarizers = getSummarizersClassicSets(summarizersSubset);
+                    List<ClassicSet> classicSetsSummarizers = getSummarizersClassicSets(summarizersSubset, houseType);
 
                     List<LinguisticVariable> variables = getSummarizersLinguisticVariables(summarizersSubset);
 
@@ -145,8 +148,13 @@ public class Application extends javafx.application.Application {
                                 }
 
                                 if (ok) {
-                                    SummaryMaker sum = summaryBuilder.withSummarizers(variables).
-                                            withQuantifier(linguisticQuantifierRepo.getAll()).build();
+                                    summaryBuilder.withSummarizers(variables).
+                                            withQuantifier(linguisticQuantifierRepo.getAll());
+
+                                    if (houseType != "")
+                                        summaryBuilder.withHouseTypes(Collections.singletonList(houseType));
+
+                                    SummaryMaker sum = summaryBuilder.build();
 
                                     summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
                                 }
@@ -177,7 +185,7 @@ public class Application extends javafx.application.Application {
 
                                 List<LinguisticVariable> qualifiers = getSummarizersLinguisticVariables(qualifierSubset);
 
-                                List<ClassicSet> classicSetsQualifiers = getSummarizersClassicSets(qualifierSubset);
+                                List<ClassicSet> classicSetsQualifiers = getSummarizersClassicSets(qualifierSubset, houseType);
 
 
                                 for (int i = 0; i < qualifierSubset.size(); i++) {
@@ -230,9 +238,14 @@ public class Application extends javafx.application.Application {
                                         }
 
                                         if (ok) {
-                                            SummaryMaker sum = summaryBuilder.withSummarizers(variables).
+                                            summaryBuilder.withSummarizers(variables).
                                                     withQuantifier(linguisticQuantifierRepo.getSelected(LinguisticQuantifiersTypes.relative)).
-                                                    withQualifiers(qualifiers).build();
+                                                    withQualifiers(qualifiers);
+
+                                            if (houseType != "")
+                                                summaryBuilder.withHouseTypes(Collections.singletonList(houseType));
+
+                                            SummaryMaker sum = summaryBuilder.build();
 
                                             summaryRepo.addAll(sum.getStringSummariesWithAverageT(weights));
                                         }

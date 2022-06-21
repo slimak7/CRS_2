@@ -55,7 +55,10 @@ public class HousesRepo {
 
     public List<Double> getValuesOfAttribute(AttributeType attributeType, String type) {
 
-        return getValuesOfAttribute(attributeType, houses.stream().filter(x -> x.getHouseType().equals(type)).collect(Collectors.toList()));
+        if (type != "")
+            return getValuesOfAttribute(attributeType, houses.stream().filter(x -> x.getHouseType().equals(type)).collect(Collectors.toList()));
+        else
+            return getValuesOfAttribute(attributeType);
     }
 
     public List<Double> getValuesOfAttribute(AttributeType attributeType) {

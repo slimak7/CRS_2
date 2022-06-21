@@ -88,7 +88,10 @@ public class SummaryMaker {
 
                 if (multiForm.equals(1)) {
 
-                    text += " domów jest/ma ";
+                    if (houseTypes == null)
+                        text += " domów jest/ma ";
+                    else
+                        text += " domów typu " + houseTypes.get(0) + " ma ";
 
                     text += summarizers.get(0).getString();
 
@@ -101,8 +104,10 @@ public class SummaryMaker {
 
                 } else {
 
-
-                    text += " domów, które są/mają ";
+                    if (houseTypes == null)
+                        text += " domów, które są/mają ";
+                    else
+                        text += " domów typu " + houseTypes.get(0) + ", które są/mają ";
 
                     int j = 0;
                     for (var q:qualifiers
